@@ -41,6 +41,14 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-gold via-yellow-200 to-gold;
   }
 
+  .text-luxury-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite];
+  }
+
+  .text-luxury-emerald {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 via-emerald-200 to-emerald-600 bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite];
+  }
+
   /* Admin Dashboard specific styling */
   .admin-panel {
     @apply bg-admin-card backdrop-blur-2xl border border-admin-border shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500;
@@ -53,6 +61,26 @@
   .admin-text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-200 via-white to-slate-400;
   }
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  33% { transform: translateY(-20px) translateX(10px); }
+  66% { transform: translateY(10px) translateX(-15px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+.ambient-orb {
+  @apply fixed rounded-full blur-[120px] pointer-events-none mix-blend-screen animate-[float_20s_ease-in-out_infinite];
 }
 
 /* Base resets for animations */

@@ -12,9 +12,7 @@ export default async function AdminDashboard() {
   const { categories, globalStats } = await getRegistryIndex();
 
   return (
-    <main className="min-h-screen bg-admin-bg relative z-0 text-slate-200">
-      {/* Decorative ambient background for premium feel */}
-      <div className="absolute top-0 left-0 w-full h-96 bg-admin-accent-glow blur-[120px] rounded-full opacity-30 pointer-events-none -translate-y-1/2"></div>
+    <main className="min-h-screen bg-transparent relative z-0 text-slate-200">
       
       {/* Admin Top Navigation */}
       <nav className="w-full border-b border-admin-border bg-admin-card/50 backdrop-blur-md relative z-10 sticky top-0">
@@ -23,7 +21,7 @@ export default async function AdminDashboard() {
             <div className="w-8 h-8 rounded-lg bg-admin-accent/20 border border-admin-accent/30 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-admin-accent" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
-            <span className="font-serif text-lg font-medium text-white tracking-wide">Perfect Protocol</span>
+            <span className="font-serif text-lg font-medium text-luxury-gold tracking-wide">Perfect Protocol</span>
             <span className="font-sans text-xs tracking-[0.15em] uppercase text-admin-accent px-3 py-1 bg-admin-accent/10 rounded-full border border-admin-accent/20 ml-2">Admin Control</span>
           </div>
           <div className="flex items-center gap-4">
@@ -49,7 +47,7 @@ export default async function AdminDashboard() {
                     Protocol Active
                 </div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tight leading-tight">System Overview</h1>
+            <h1 className="text-4xl md:text-5xl font-serif text-luxury-gold tracking-tight leading-tight">System Overview</h1>
             <p className="text-slate-400 font-sans text-sm tracking-wide max-w-xl">Centralized command for your exclusive categories. Monitor guest volume and archive completed sessions.</p>
           </div>
         </header>

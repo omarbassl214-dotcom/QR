@@ -21,7 +21,7 @@
           "completed": false,
           "publicPath": "/weddings/ahmad-sara",
           "usherPath": "/usher/weddings/ahmad-sara",
-          "usherCount": 0,
+          "usherCount": 2,
           "checkedInGuestNames": [],
           "unarrivedGuestNames": [
             "Aisha Mahmoud",
@@ -35,7 +35,10 @@
             "Omar Zaki",
             "Hiba Tawfiq"
           ],
-          "usherNames": []
+          "usherNames": [
+            "omar basil",
+            "Final Check Usher"
+          ]
         },
         {
           "id": "arabic-test",

@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { AmbientBackground } from "@/components/AmbientBackground";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 
 export const metadata: Metadata = {
   title: "Perfect Protocol - Premium Event Access",
@@ -12,11 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${inter.variable} ${playfair.variable}`}>
       <body
-        className={`antialiased selection:bg-gold/30 selection:text-gold bg-obsidian text-slate-100 min-h-screen flex flex-col font-sans`}
+        className={`antialiased selection:bg-gold/30 selection:text-gold bg-obsidian text-slate-100 min-h-screen flex flex-col font-sans relative`}
       >
-        <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900/40 via-obsidian to-obsidian pointer-events-none"></div>
+        <AmbientBackground />
         {children}
       </body>
     </html>

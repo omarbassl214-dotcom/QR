@@ -15,10 +15,11 @@ export default function UsherCheckInPage() {
         const storedName = localStorage.getItem("usher_name");
         if (!storedName) {
             setStatus("no-identity");
-            // Automatically redirect after a short delay
+            // Automatically redirect after a short delay, passing current URL as redirect
+            const currentPath = window.location.pathname;
             setTimeout(() => {
-                router.push("/usher/sign-in");
-            }, 3000);
+                router.push(`/usher/sign-in?redirect=${encodeURIComponent(currentPath)}`);
+            }, 2500);
             return;
         }
 

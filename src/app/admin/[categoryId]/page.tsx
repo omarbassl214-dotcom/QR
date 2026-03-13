@@ -21,9 +21,7 @@ export default async function AdminCategoryPage({ params }: { params: Promise<{ 
     const categoryName = category.name;
 
     return (
-        <main className="min-h-screen bg-admin-bg relative z-0 text-slate-200">
-            {/* Decorative ambient background */}
-            <div className="absolute top-0 right-0 w-2/3 h-96 bg-admin-accent-glow blur-[120px] rounded-full opacity-20 pointer-events-none -translate-y-1/2"></div>
+        <main className="min-h-screen bg-transparent relative z-0 text-slate-200">
             
             {/* Admin Top Navigation */}
             <nav className="w-full border-b border-admin-border bg-admin-card/50 backdrop-blur-md relative z-10 sticky top-0">
@@ -37,7 +35,7 @@ export default async function AdminCategoryPage({ params }: { params: Promise<{ 
                             <div className="w-8 h-8 rounded-lg bg-admin-accent/20 border border-admin-accent/30 flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-admin-accent" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                             </div>
-                            <span className="font-serif text-lg font-medium text-white tracking-wide">Perfect Protocol</span>
+                            <span className="font-serif text-lg font-medium text-luxury-gold tracking-wide">Perfect Protocol</span>
                             <span className="font-sans text-xs tracking-[0.15em] uppercase text-slate-500 hidden sm:inline ml-2">/ Datasets / {categoryName}</span>
                         </div>
                     </div>
@@ -60,7 +58,7 @@ export default async function AdminCategoryPage({ params }: { params: Promise<{ 
                             <div className="w-1.5 h-1.5 rounded-full bg-admin-accent animate-pulse"></div>
                             Live Dataset
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tight leading-tight">{categoryName} Roster</h1>
+                        <h1 className="text-4xl md:text-5xl font-serif text-luxury-gold tracking-tight leading-tight">{categoryName} Roster</h1>
                         <p className="text-slate-400 font-sans text-sm tracking-wide max-w-xl">Manage individual event instances, access entry portals, and generate access QR codes.</p>
                     </div>
                     

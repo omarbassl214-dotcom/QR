@@ -2,13 +2,13 @@ import { createClient, VercelKV } from "@vercel/kv";
 
 // Ensure URL starts with https (Upstash REST API requirement)
 const getValidUrl = (url?: string) => {
-    if (!url) return "";
+    if (!url || url.includes("your-upstash-url-here")) return "";
     return url.startsWith("https") ? url : "";
 };
 
 const KV_CONFIG = {
     url: getValidUrl(process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL),
-    token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || "",
+    token: (process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || "").includes("your-token-here") ? "" : (process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || ""),
 };
 
 // Lazy initialization to prevent build-time crashes if URL is invalid
@@ -141,39 +141,43 @@ export async function mergeRegistryWithKV(index: any) {
         // We iterate through all events and merge their KV data
         for (const category of index.categories) {
             for (const event of category.events) {
-                // 1. Sync Completion Status
-                const isCompleted = await kv.get(`status:${category.id}:${event.id}`);
-                if (isCompleted !== null) {
-                    event.completed = !!isCompleted;
-                }
+                try {
+                    // 1. Sync Completion Status
+                    const isCompleted = await kv.get(`status:${category.id}:${event.id}`);
+                    if (isCompleted !== null) {
+                        event.completed = !!isCompleted;
+                    }
 
-                // 2. Sync Check-in Counts
-                const checkedInIds = await kv.smembers(`checkins:${category.id}:${event.id}`);
-                if (checkedInIds && checkedInIds.length > 0) {
-                    event.checkedInGuests = Math.max(event.checkedInGuests, checkedInIds.length);
-                }
+                    // 2. Sync Check-in Counts
+                    const checkedInIds = await kv.smembers(`checkins:${category.id}:${event.id}`);
+                    if (checkedInIds && checkedInIds.length > 0) {
+                        event.checkedInGuests = Math.max(event.checkedInGuests, checkedInIds.length);
+                    }
 
-                // 3. Sync Guest Names (Moves them between lists)
-                const liveNames = await kv.smembers(`names:${category.id}:${event.id}`);
-                if (liveNames && liveNames.length > 0) {
-                    const checkedInSet = new Set(liveNames.map(String));
-                    
-                    // Add any existing names from the index that might not be in KV yet
-                    (event.checkedInGuestNames || []).forEach((n: string) => checkedInSet.add(n));
-                    
-                    event.checkedInGuestNames = Array.from(checkedInSet);
-                    
-                    // Filter the unarrived list to remove anyone who is now in checked-in list
-                    event.unarrivedGuestNames = (event.unarrivedGuestNames || []).filter((n: string) => !checkedInSet.has(n));
-                }
+                    // 3. Sync Guest Names (Moves them between lists)
+                    const liveNames = await kv.smembers(`names:${category.id}:${event.id}`);
+                    if (liveNames && liveNames.length > 0) {
+                        const checkedInSet = new Set(liveNames.map(String));
+                        
+                        // Add any existing names from the index that might not be in KV yet
+                        (event.checkedInGuestNames || []).forEach((n: string) => checkedInSet.add(n));
+                        
+                        event.checkedInGuestNames = Array.from(checkedInSet);
+                        
+                        // Filter the unarrived list to remove anyone who is now in checked-in list
+                        event.unarrivedGuestNames = (event.unarrivedGuestNames || []).filter((n: string) => !checkedInSet.has(n));
+                    }
 
-                // 4. Sync Ushers
-                const usherNames = await kv.smembers(`ushers:${category.id}:${event.id}`);
-                if (usherNames && usherNames.length > 0) {
-                    const existingUshers = new Set(event.usherNames || []);
-                    usherNames.forEach((u: any) => existingUshers.add(String(u)));
-                    event.usherNames = Array.from(existingUshers);
-                    event.usherCount = event.usherNames.length;
+                    // 4. Sync Ushers
+                    const usherNames = await kv.smembers(`ushers:${category.id}:${event.id}`);
+                    if (usherNames && usherNames.length > 0) {
+                        const existingUshers = new Set(event.usherNames || []);
+                        usherNames.forEach((u: any) => existingUshers.add(String(u)));
+                        event.usherNames = Array.from(existingUshers);
+                        event.usherCount = event.usherNames.length;
+                    }
+                } catch (eventErr) {
+                    // Fail gracefully for single event
                 }
             }
             
