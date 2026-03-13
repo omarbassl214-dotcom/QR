@@ -1,13 +1,10 @@
-import { createClient } from "@vercel/kv";
+import { kv } from "@vercel/kv";
 
-// Vercel KV usually uses KV_REST_API_URL and KV_REST_API_TOKEN.
-// If the user uses the Redis integration, they might have REDIS_URL.
-const kv = createClient({
-    url: process.env.KV_REST_API_URL || process.env.REDIS_URL || "",
-    token: process.env.KV_REST_API_TOKEN || "",
-});
-
-export const HAS_DB = !!(process.env.KV_REST_API_URL || process.env.REDIS_URL);
+// We check for both standard Vercel KV vars and Upstash-specific ones
+export const HAS_DB = !!(
+    (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) ||
+    (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
+);
 
 export async function getLiveCheckins(categoryId: string, eventId: string): Promise<string[]> {
     if (!HAS_DB) return [];
