@@ -180,7 +180,11 @@ export async function getRegistryIndex(): Promise<RegistryIndex> {
 
     try {
         const data = fs.readFileSync(INDEX_PATH, "utf8");
-        return JSON.parse(data);
+        const index = JSON.parse(data);
+        
+        // Merge with KV data if on Vercel
+        const { mergeRegistryWithKV } = await import("./storage");
+        return await mergeRegistryWithKV(index);
     } catch (e) {
         return await syncRegistry();
     }

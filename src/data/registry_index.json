@@ -1,31 +1,30 @@
 {
   "globalStats": {
     "totalGuests": 246,
-    "activeEvents": 2,
-    "doneEvents": 3
+    "activeEvents": 5,
+    "doneEvents": 0
   },
   "categories": [
     {
       "id": "weddings",
       "name": "Weddings",
       "path": "/admin/weddings",
-      "activeCount": 0,
-      "doneCount": 3,
+      "activeCount": 3,
+      "doneCount": 0,
       "guestCount": 232,
       "events": [
         {
           "id": "ahmad-sara",
           "name": "Ahmad Sara",
           "totalGuests": 10,
-          "checkedInGuests": 1,
-          "completed": true,
+          "checkedInGuests": 0,
+          "completed": false,
           "publicPath": "/weddings/ahmad-sara",
           "usherPath": "/usher/weddings/ahmad-sara",
-          "usherCount": 1,
-          "checkedInGuestNames": [
-            "Aisha Mahmoud"
-          ],
+          "usherCount": 0,
+          "checkedInGuestNames": [],
           "unarrivedGuestNames": [
+            "Aisha Mahmoud",
             "Tariq Mansour",
             "Leila Haddad",
             "Samir Amin",
@@ -36,28 +35,25 @@
             "Omar Zaki",
             "Hiba Tawfiq"
           ],
-          "usherNames": [
-            "omar basil"
-          ]
+          "usherNames": []
         },
         {
           "id": "arabic-test",
           "name": "Arabic Test",
           "totalGuests": 216,
-          "checkedInGuests": 6,
-          "completed": true,
+          "checkedInGuests": 0,
+          "completed": false,
           "publicPath": "/weddings/arabic-test",
           "usherPath": "/usher/weddings/arabic-test",
-          "usherCount": 1,
-          "checkedInGuestNames": [
+          "usherCount": 0,
+          "checkedInGuestNames": [],
+          "unarrivedGuestNames": [
             "هديل شحادة",
             "سلوى شكوكاني",
             "عبير شحادة",
             "موسى شكوكاني",
             "أسماء جابر",
-            "زوجة انور العسعس"
-          ],
-          "unarrivedGuestNames": [
+            "زوجة انور العسعس",
             "نبيلة شحادة",
             "احمد سبيتان",
             "مي جابر",
@@ -269,19 +265,17 @@
             "انور العسعس",
             "ابنة حميد حميدة"
           ],
-          "usherNames": [
-            "omar b aburahma"
-          ]
+          "usherNames": []
         },
         {
           "id": "mohamed-maya",
           "name": "Mohamed Maya",
           "totalGuests": 6,
           "checkedInGuests": 0,
-          "completed": true,
+          "completed": false,
           "publicPath": "/weddings/mohamed-maya",
           "usherPath": "/usher/weddings/mohamed-maya",
-          "usherCount": 1,
+          "usherCount": 0,
           "checkedInGuestNames": [],
           "unarrivedGuestNames": [
             "Mohamed Ali",
@@ -291,9 +285,7 @@
             "Omar Farooq",
             "Laila Nour"
           ],
-          "usherNames": [
-            "omar basil"
-          ]
+          "usherNames": []
         }
       ]
     },
@@ -350,5 +342,5 @@
       ]
     }
   ],
-  "lastSynced": "2026-03-12T21:25:47.122Z"
+  "lastSynced": "2026-03-13T03:02:55.145Z"
 }

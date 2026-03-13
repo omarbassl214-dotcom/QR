@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { Guest } from "@/app/[categoryId]/[eventId]/SearchClient";
+import { addLiveCheckin } from "@/lib/storage";
 
 export async function POST(request: Request) {
     try {
@@ -30,7 +31,17 @@ export async function POST(request: Request) {
         // Toggle or set the attended status
         guests[guestIndex].attended = true;
 
-        fs.writeFileSync(filePath, JSON.stringify(guests, null, 2), "utf8");
+        if (fs.existsSync(filePath)) {
+            // Only write to file if possible (local dev)
+            try {
+                fs.writeFileSync(filePath, JSON.stringify(guests, null, 2), "utf8");
+            } catch (e) {
+                // Ignore write errors in production (read-only FS)
+            }
+        }
+
+        // Always update KV if in Vercel
+        await addLiveCheckin(categoryId, eventId, guestId);
 
         // Update central registry index for performance
         const { updateIndexEvent } = await import("@/lib/registry");

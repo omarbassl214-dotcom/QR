@@ -39,7 +39,7 @@
     "firstName": "Aisha",
     "lastName": "Mahmoud",
     "tableNumber": 3,
-    "attended": true
+    "attended": false
   },
   {
     "id": "7",
