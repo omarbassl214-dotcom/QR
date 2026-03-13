@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { Guest } from "@/app/[categoryId]/[eventId]/SearchClient";
+import { addLiveCheckin, HAS_DB } from "@/lib/storage";
 
 export async function POST(request: Request) {
     try {
@@ -30,7 +31,17 @@ export async function POST(request: Request) {
         // Toggle or set the attended status
         guests[guestIndex].attended = true;
 
-        fs.writeFileSync(filePath, JSON.stringify(guests, null, 2), "utf8");
+        if (fs.existsSync(filePath)) {
+            // Only write to file if possible (local dev)
+            try {
+                fs.writeFileSync(filePath, JSON.stringify(guests, null, 2), "utf8");
+            } catch (e) {
+                // Ignore write errors in production (read-only FS)
+            }
+        }
+
+        // Always update KV if in Vercel
+        await addLiveCheckin(categoryId, eventId, guestId);
 
         // Update central registry index for performance
         const { updateIndexEvent } = await import("@/lib/registry");
@@ -56,8 +67,11 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json({ success: true, guest: guests[guestIndex] });
-    } catch (error) {
-        console.error("Error in check-in route:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    } catch (error: any) {
+        console.error("Check-in error:", error);
+        return NextResponse.json({ 
+            error: "Failed to process check-in", 
+            message: error.message 
+        }, { status: 500 });
     }
 }

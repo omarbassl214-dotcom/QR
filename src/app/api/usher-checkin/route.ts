@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { addLiveUsher } from "@/lib/storage";
 
 const USHERS_DATA_DIR = path.join(process.cwd(), "src/data/ushers");
 
@@ -39,7 +40,17 @@ export async function POST(req: NextRequest) {
         };
 
         checkins.push(newCheckin);
-        fs.writeFileSync(filePath, JSON.stringify(checkins, null, 2));
+        
+        if (fs.existsSync(USHERS_DATA_DIR)) {
+            try {
+                fs.writeFileSync(filePath, JSON.stringify(checkins, null, 2));
+            } catch (e) {
+                // Ignore write errors in production
+            }
+        }
+
+        // Always update KV if in Vercel
+        await addLiveUsher(categoryId, eventId, usherName);
 
         // Update central registry index
         const { updateIndexEvent } = await import("@/lib/registry");

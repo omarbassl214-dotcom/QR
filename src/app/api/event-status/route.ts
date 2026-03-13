@@ -42,8 +42,11 @@ export async function POST(request: Request) {
 
         const metaPath = path.join(metaDir, `${eventId}.json`);
         const metadata = { completed: !!completed, lastModified: new Date().toISOString() };
-
-        fs.writeFileSync(metaPath, JSON.stringify(metadata, null, 2), "utf8");
+        try {
+            fs.writeFileSync(metaPath, JSON.stringify(metadata, null, 2), "utf8");
+        } catch (e) {
+            // Skip in production
+        }
 
         // Update the central registry index for performance
         const { updateIndexEvent } = await import("@/lib/registry");

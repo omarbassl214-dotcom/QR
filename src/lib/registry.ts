@@ -165,8 +165,12 @@ export async function syncRegistry(): Promise<RegistryIndex> {
         lastSynced: new Date().toISOString()
     };
 
-    // Atomic write
-    fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
+    // Atomic write (local only)
+    try {
+        fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
+    } catch (e) {
+        // Skip in production
+    }
     return index;
 }
 
@@ -180,7 +184,11 @@ export async function getRegistryIndex(): Promise<RegistryIndex> {
 
     try {
         const data = fs.readFileSync(INDEX_PATH, "utf8");
-        return JSON.parse(data);
+        const index = JSON.parse(data);
+        
+        // Merge with KV data if on Vercel
+        const { mergeRegistryWithKV } = await import("./storage");
+        return await mergeRegistryWithKV(index);
     } catch (e) {
         return await syncRegistry();
     }
@@ -247,7 +255,11 @@ export async function updateIndexEvent(
             event.usherNames = updates.usherNames;
         }
 
-        fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
+        try {
+            fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
+        } catch (e) {
+            // Skip in production
+        }
     } catch (e) {
         console.error("Failed to update index:", e);
     }

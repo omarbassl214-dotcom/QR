@@ -38,7 +38,11 @@ export async function POST(req: Request) {
         }
 
         const filePath = path.join(dirPath, `${eventId}.json`);
-        fs.writeFileSync(filePath, JSON.stringify(coordinates, null, 4), "utf8");
+        try {
+            fs.writeFileSync(filePath, JSON.stringify(coordinates, null, 4), "utf8");
+        } catch (e) {
+            // Skip in production
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

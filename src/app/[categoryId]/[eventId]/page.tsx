@@ -2,13 +2,17 @@ import { notFound } from "next/navigation";
 import SearchClient, { Guest } from "./SearchClient";
 import fs from "fs";
 import path from "path";
+import { mergeLiveGuestData } from "@/lib/storage";
 
 async function getEventData(categoryId: string, eventId: string): Promise<Guest[] | null> {
     try {
         const filePath = path.join(process.cwd(), "src/data", categoryId, `${eventId}.json`);
         const fileContents = fs.readFileSync(filePath, "utf8");
         const data = JSON.parse(fileContents);
-        return Array.isArray(data) ? data : null;
+        if (!Array.isArray(data)) return null;
+
+        // Merge with live KV data
+        return await mergeLiveGuestData(categoryId, eventId, data);
     } catch (error) {
         return null;
     }

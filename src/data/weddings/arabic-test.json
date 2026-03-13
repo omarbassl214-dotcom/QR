@@ -4,28 +4,28 @@
     "firstName": "هديل",
     "lastName": "شحادة",
     "tableNumber": 2,
-    "attended": true
+    "attended": false
   },
   {
     "id": "2",
     "firstName": "سلوى",
     "lastName": "شكوكاني",
     "tableNumber": 1,
-    "attended": true
+    "attended": false
   },
   {
     "id": "3",
     "firstName": "عبير",
     "lastName": "شحادة",
     "tableNumber": 2,
-    "attended": true
+    "attended": false
   },
   {
     "id": "4",
     "firstName": "موسى",
     "lastName": "شكوكاني",
     "tableNumber": 1,
-    "attended": true
+    "attended": false
   },
   {
     "id": "5",
@@ -39,7 +39,7 @@
     "firstName": "أسماء",
     "lastName": "جابر",
     "tableNumber": 1,
-    "attended": true
+    "attended": false
   },
   {
     "id": "7",
@@ -1509,6 +1509,6 @@
     "firstName": "زوجة",
     "lastName": "انور العسعس",
     "tableNumber": 21,
-    "attended": true
+    "attended": false
   }
 ]
