@@ -1,9 +1,16 @@
-import { kv } from "@vercel/kv";
+import { createClient } from "@vercel/kv";
 
-const IS_VERCEL = process.env.VERCEL === "1" || !!process.env.KV_URL || !!process.env.REDIS_URL;
+// Vercel KV usually uses KV_REST_API_URL and KV_REST_API_TOKEN.
+// If the user uses the Redis integration, they might have REDIS_URL.
+const kv = createClient({
+    url: process.env.KV_REST_API_URL || process.env.REDIS_URL || "",
+    token: process.env.KV_REST_API_TOKEN || "",
+});
+
+export const HAS_DB = !!(process.env.KV_REST_API_URL || process.env.REDIS_URL);
 
 export async function getLiveCheckins(categoryId: string, eventId: string): Promise<string[]> {
-    if (!IS_VERCEL) return [];
+    if (!HAS_DB) return [];
     try {
         const key = `checkins:${categoryId}:${eventId}`;
         const checkins = await kv.get<string[]>(key);
@@ -15,7 +22,7 @@ export async function getLiveCheckins(categoryId: string, eventId: string): Prom
 }
 
 export async function addLiveCheckin(categoryId: string, eventId: string, guestId: string) {
-    if (!IS_VERCEL) return;
+    if (!HAS_DB) return;
     try {
         const key = `checkins:${categoryId}:${eventId}`;
         await kv.sadd(key, guestId);
@@ -25,7 +32,7 @@ export async function addLiveCheckin(categoryId: string, eventId: string, guestI
 }
 
 export async function getLiveUshers(categoryId: string, eventId: string): Promise<string[]> {
-    if (!IS_VERCEL) return [];
+    if (!HAS_DB) return [];
     try {
         const key = `ushers:${categoryId}:${eventId}`;
         const ushers = await kv.get<string[]>(key);
@@ -37,7 +44,7 @@ export async function getLiveUshers(categoryId: string, eventId: string): Promis
 }
 
 export async function addLiveUsher(categoryId: string, eventId: string, usherName: string) {
-    if (!IS_VERCEL) return;
+    if (!HAS_DB) return;
     try {
         const key = `ushers:${categoryId}:${eventId}`;
         await kv.sadd(key, usherName);
@@ -50,7 +57,7 @@ export async function addLiveUsher(categoryId: string, eventId: string, usherNam
  * Merges local file data with live KV data
  */
 export async function mergeLiveGuestData(categoryId: string, eventId: string, localGuests: any[]) {
-    if (!IS_VERCEL) return localGuests;
+    if (!HAS_DB) return localGuests;
     
     try {
         const checkedInIds = await kv.smembers(`checkins:${categoryId}:${eventId}`);
@@ -70,7 +77,7 @@ export async function mergeLiveGuestData(categoryId: string, eventId: string, lo
  * Merges the entire registry index with KV data for global dashboards
  */
 export async function mergeRegistryWithKV(index: any) {
-    if (!IS_VERCEL) return index;
+    if (!HAS_DB) return index;
 
     try {
         // We iterate through all events and merge their KV data

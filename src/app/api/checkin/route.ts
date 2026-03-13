@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { Guest } from "@/app/[categoryId]/[eventId]/SearchClient";
-import { addLiveCheckin } from "@/lib/storage";
+import { addLiveCheckin, HAS_DB } from "@/lib/storage";
 
 export async function POST(request: Request) {
     try {
@@ -67,8 +67,17 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json({ success: true, guest: guests[guestIndex] });
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error in check-in route:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        return NextResponse.json({ 
+            error: "Internal server error", 
+            details: error.message,
+            stack: error.stack,
+            env: {
+                HAS_DB,
+                cwd: process.cwd(),
+                nodeEnv: process.env.NODE_ENV
+            }
+        }, { status: 500 });
     }
 }
