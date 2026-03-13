@@ -42,6 +42,12 @@ export async function POST(request: Request) {
 
         // Always update KV if in Vercel
         await addLiveCheckin(categoryId, eventId, guestId);
+        
+        const guest = guests[guestIndex];
+        const guestName = (guest as any).name || `${(guest as any).firstName || ""} ${(guest as any).lastName || ""}`.trim() || `Guest ${guest.id}`;
+        
+        const { addLiveGuestName } = await import("@/lib/storage");
+        await addLiveGuestName(categoryId, eventId, guestName);
 
         // Update central registry index for performance
         const { updateIndexEvent } = await import("@/lib/registry");
