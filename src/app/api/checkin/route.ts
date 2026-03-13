@@ -68,16 +68,10 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ success: true, guest: guests[guestIndex] });
     } catch (error: any) {
-        console.error("Error in check-in route:", error);
+        console.error("Check-in error:", error);
         return NextResponse.json({ 
-            error: "Internal server error", 
-            details: error.message,
-            stack: error.stack,
-            env: {
-                HAS_DB,
-                cwd: process.cwd(),
-                nodeEnv: process.env.NODE_ENV
-            }
+            error: "Failed to process check-in", 
+            message: error.message 
         }, { status: 500 });
     }
 }

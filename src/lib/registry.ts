@@ -165,8 +165,12 @@ export async function syncRegistry(): Promise<RegistryIndex> {
         lastSynced: new Date().toISOString()
     };
 
-    // Atomic write
-    fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
+    // Atomic write (local only)
+    try {
+        fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
+    } catch (e) {
+        // Skip in production
+    }
     return index;
 }
 
@@ -251,7 +255,11 @@ export async function updateIndexEvent(
             event.usherNames = updates.usherNames;
         }
 
-        fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
+        try {
+            fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
+        } catch (e) {
+            // Skip in production
+        }
     } catch (e) {
         console.error("Failed to update index:", e);
     }
