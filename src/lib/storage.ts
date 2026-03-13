@@ -54,6 +54,17 @@ export async function addLiveCheckin(categoryId: string, eventId: string, guestI
     }
 }
 
+export async function addLiveGuestName(categoryId: string, eventId: string, guestName: string) {
+    const kv = getKV();
+    if (!kv) return;
+    try {
+        const key = `names:${categoryId}:${eventId}`;
+        await kv.sadd(key, guestName);
+    } catch (e) {
+        console.error("KV Error:", e);
+    }
+}
+
 export async function getLiveUshers(categoryId: string, eventId: string): Promise<string[]> {
     const kv = getKV();
     if (!kv) return [];
@@ -130,29 +141,39 @@ export async function mergeRegistryWithKV(index: any) {
         // We iterate through all events and merge their KV data
         for (const category of index.categories) {
             for (const event of category.events) {
-                const checkedInIds = await kv.smembers(`checkins:${category.id}:${event.id}`);
-                const usherNames = await kv.smembers(`ushers:${category.id}:${event.id}`);
-
-                if (checkedInIds && checkedInIds.length > 0) {
-                    // Update count accurately
-                    event.checkedInGuests = Math.max(event.checkedInGuests, checkedInIds.length);
-                    
-                    // We can't easily move names here without doing a full guest-list scan,
-                    // but the check-in API already does this for us and updates the index!
-                    // This merge just ensures the counts stay high if the index file is reset.
-                }
-
+                // 1. Sync Completion Status
                 const isCompleted = await kv.get(`status:${category.id}:${event.id}`);
                 if (isCompleted !== null) {
                     event.completed = !!isCompleted;
                 }
 
+                // 2. Sync Check-in Counts
+                const checkedInIds = await kv.smembers(`checkins:${category.id}:${event.id}`);
+                if (checkedInIds && checkedInIds.length > 0) {
+                    event.checkedInGuests = Math.max(event.checkedInGuests, checkedInIds.length);
+                }
+
+                // 3. Sync Guest Names (Moves them between lists)
+                const liveNames = await kv.smembers(`names:${category.id}:${event.id}`);
+                if (liveNames && liveNames.length > 0) {
+                    const checkedInSet = new Set(liveNames.map(String));
+                    
+                    // Add any existing names from the index that might not be in KV yet
+                    (event.checkedInGuestNames || []).forEach((n: string) => checkedInSet.add(n));
+                    
+                    event.checkedInGuestNames = Array.from(checkedInSet);
+                    
+                    // Filter the unarrived list to remove anyone who is now in checked-in list
+                    event.unarrivedGuestNames = (event.unarrivedGuestNames || []).filter((n: string) => !checkedInSet.has(n));
+                }
+
+                // 4. Sync Ushers
+                const usherNames = await kv.smembers(`ushers:${category.id}:${event.id}`);
                 if (usherNames && usherNames.length > 0) {
-                    event.usherCount = Math.max(event.usherCount, usherNames.length);
-                    // Merge names without duplicates
-                    const existingNames = new Set(event.usherNames || []);
-                    usherNames.forEach((u: any) => existingNames.add(String(u)));
-                    event.usherNames = Array.from(existingNames);
+                    const existingUshers = new Set(event.usherNames || []);
+                    usherNames.forEach((u: any) => existingUshers.add(String(u)));
+                    event.usherNames = Array.from(existingUshers);
+                    event.usherCount = event.usherNames.length;
                 }
             }
             
