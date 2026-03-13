@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-obsidian: #0A0A0B;
+  --color-obsidian-light: #161618;
+  --color-gold: #D4AF37;
+  --color-gold-muted: rgba(212, 175, 55, 0.4);
+  
+  /* Admin Premium Theme Colors */
+  --color-admin-bg: #09090b; /* Zinc 950 essentially */
+  --color-admin-card: rgba(24, 24, 27, 0.6); 
+  --color-admin-card-hover: rgba(39, 39, 42, 0.8);
+  --color-admin-border: rgba(255, 255, 255, 0.08);
+  --color-admin-border-hover: rgba(255, 255, 255, 0.15);
+  --color-admin-accent: rgba(56, 189, 248, 0.8); /* Sky 400 */
+  --color-admin-accent-glow: rgba(56, 189, 248, 0.2);
+  
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-obsidian);
+    color: #F8FAFC;
+    font-family: var(--font-sans);
+  }
+}
+
+/* Glassmorphism Utilities */
+@layer utilities {
+  .glass-panel {
+    @apply bg-obsidian-light/40 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)];
+  }
+  
+  .glass-panel-hover {
+    @apply hover:bg-obsidian-light/60 hover:border-white/20 hover:shadow-[0_8px_40px_rgba(212,175,55,0.08)] transition-all duration-500;
+  }
+  
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold via-yellow-200 to-gold;
+  }
+
+  /* Admin Dashboard specific styling */
+  .admin-panel {
+    @apply bg-admin-card backdrop-blur-2xl border border-admin-border shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500;
+  }
+
+  .admin-panel-hover {
+    @apply hover:bg-admin-card-hover hover:border-admin-border-hover hover:shadow-[0_8px_40px_var(--color-admin-accent-glow)] hover:-translate-y-1;
+  }
+  
+  .admin-text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-200 via-white to-slate-400;
+  }
+}
+
+/* Base resets for animations */
+::selection {
+  background-color: var(--color-gold-muted);
+  color: #fff;
+}

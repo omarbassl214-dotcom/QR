@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1",
+    "firstName": "Alice",
+    "lastName": "Johnson",
+    "tableNumber": 101,
+    "attended": false
+  },
+  {
+    "id": "2",
+    "firstName": "Bob",
+    "lastName": "Smith",
+    "tableNumber": 101,
+    "attended": false
+  },
+  {
+    "id": "3",
+    "firstName": "Charlie",
+    "lastName": "Davis",
+    "tableNumber": 102,
+    "attended": false
+  },
+  {
+    "id": "4",
+    "firstName": "Diana",
+    "lastName": "Evans",
+    "tableNumber": 102,
+    "attended": false
+  },
+  {
+    "id": "5",
+    "firstName": "Evan",
+    "lastName": "Wright",
+    "tableNumber": 103,
+    "attended": false
+  },
+  {
+    "id": "6",
+    "firstName": "Fiona",
+    "lastName": "Green",
+    "tableNumber": 103,
+    "attended": false
+  },
+  {
+    "id": "7",
+    "firstName": "George",
+    "lastName": "Harris",
+    "tableNumber": 104,
+    "attended": false
+  },
+  {
+    "id": "8",
+    "firstName": "Hannah",
+    "lastName": "Clark",
+    "tableNumber": 104,
+    "attended": false
+  }
+]

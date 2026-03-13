@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "firstName": "Ian",
+    "lastName": "Malcolm",
+    "tableNumber": 10,
+    "attended": false
+  },
+  {
+    "id": "2",
+    "firstName": "Ellie",
+    "lastName": "Sattler",
+    "tableNumber": 10,
+    "attended": false
+  },
+  {
+    "id": "3",
+    "firstName": "Alan",
+    "lastName": "Grant",
+    "tableNumber": 11,
+    "attended": false
+  },
+  {
+    "id": "4",
+    "firstName": "John",
+    "lastName": "Hammond",
+    "tableNumber": 11,
+    "attended": false
+  },
+  {
+    "id": "5",
+    "firstName": "Lex",
+    "lastName": "Murphy",
+    "tableNumber": 12,
+    "attended": false
+  },
+  {
+    "id": "6",
+    "firstName": "Tim",
+    "lastName": "Murphy",
+    "tableNumber": 12,
+    "attended": false
+  }
+]
