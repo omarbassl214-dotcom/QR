@@ -1,34 +1,42 @@
-import { createClient } from "@vercel/kv";
+import { createClient, VercelKV } from "@vercel/kv";
 
-// Define all possible environment variable pairs provided by Vercel/Upstash integrations
+// Ensure URL starts with https (Upstash REST API requirement)
+const getValidUrl = (url?: string) => {
+    if (!url) return "";
+    return url.startsWith("https") ? url : "";
+};
+
 const KV_CONFIG = {
-    url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || "",
+    url: getValidUrl(process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL),
     token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || "",
 };
 
-// Create a robust client instance
-export const kv = createClient(KV_CONFIG);
+// Lazy initialization to prevent build-time crashes if URL is invalid
+let _kv: VercelKV | null = null;
+export const getKV = () => {
+    if (!_kv && KV_CONFIG.url && KV_CONFIG.token) {
+        try {
+            _kv = createClient(KV_CONFIG);
+        } catch (e) {
+            console.error("Failed to init KV client:", e);
+        }
+    }
+    return _kv;
+};
 
 export const HAS_DB = !!(KV_CONFIG.url && KV_CONFIG.token);
 
-/**
- * Diagnostic check to log DB status in Vercel logs
- */
 if (typeof window === 'undefined') {
-    console.log("Redis Init Status:", { 
-        HAS_DB, 
-        hasUrl: !!KV_CONFIG.url, 
-        hasToken: !!KV_CONFIG.token,
-        nodeEnv: process.env.NODE_ENV
-    });
+    console.log("Redis Status:", { HAS_DB, urlType: KV_CONFIG.url ? "HTTPS" : "None/Invalid" });
 }
 
 export async function getLiveCheckins(categoryId: string, eventId: string): Promise<string[]> {
-    if (!HAS_DB) return [];
+    const kv = getKV();
+    if (!kv) return [];
     try {
         const key = `checkins:${categoryId}:${eventId}`;
-        const checkins = await kv.get<string[]>(key);
-        return checkins || [];
+        const checkins = await kv.sadd(key, []); // Ensure key exists
+        return (await kv.smembers(key)) || [];
     } catch (e) {
         console.error("KV Error:", e);
         return [];
@@ -36,7 +44,8 @@ export async function getLiveCheckins(categoryId: string, eventId: string): Prom
 }
 
 export async function addLiveCheckin(categoryId: string, eventId: string, guestId: string) {
-    if (!HAS_DB) return;
+    const kv = getKV();
+    if (!kv) return;
     try {
         const key = `checkins:${categoryId}:${eventId}`;
         await kv.sadd(key, guestId);
@@ -46,11 +55,11 @@ export async function addLiveCheckin(categoryId: string, eventId: string, guestI
 }
 
 export async function getLiveUshers(categoryId: string, eventId: string): Promise<string[]> {
-    if (!HAS_DB) return [];
+    const kv = getKV();
+    if (!kv) return [];
     try {
         const key = `ushers:${categoryId}:${eventId}`;
-        const ushers = await kv.get<string[]>(key);
-        return ushers || [];
+        return (await kv.smembers(key)) || [];
     } catch (e) {
         console.error("KV Error:", e);
         return [];
@@ -58,10 +67,32 @@ export async function getLiveUshers(categoryId: string, eventId: string): Promis
 }
 
 export async function addLiveUsher(categoryId: string, eventId: string, usherName: string) {
-    if (!HAS_DB) return;
+    const kv = getKV();
+    if (!kv) return;
     try {
         const key = `ushers:${categoryId}:${eventId}`;
         await kv.sadd(key, usherName);
+    } catch (e) {
+        console.error("KV Error:", e);
+    }
+}
+
+export async function getEventStatus(categoryId: string, eventId: string): Promise<boolean> {
+    const kv = getKV();
+    if (!kv) return false;
+    try {
+        const status = await kv.get(`status:${categoryId}:${eventId}`);
+        return !!status;
+    } catch (e) {
+        return false;
+    }
+}
+
+export async function setEventStatus(categoryId: string, eventId: string, completed: boolean) {
+    const kv = getKV();
+    if (!kv) return;
+    try {
+        await kv.set(`status:${categoryId}:${eventId}`, completed);
     } catch (e) {
         console.error("KV Error:", e);
     }
@@ -71,7 +102,8 @@ export async function addLiveUsher(categoryId: string, eventId: string, usherNam
  * Merges local file data with live KV data
  */
 export async function mergeLiveGuestData(categoryId: string, eventId: string, localGuests: any[]) {
-    if (!HAS_DB) return localGuests;
+    const kv = getKV();
+    if (!kv) return localGuests;
     
     try {
         const checkedInIds = await kv.smembers(`checkins:${categoryId}:${eventId}`);
@@ -91,7 +123,8 @@ export async function mergeLiveGuestData(categoryId: string, eventId: string, lo
  * Merges the entire registry index with KV data for global dashboards
  */
 export async function mergeRegistryWithKV(index: any) {
-    if (!HAS_DB) return index;
+    const kv = getKV();
+    if (!kv) return index;
 
     try {
         // We iterate through all events and merge their KV data
@@ -103,6 +136,15 @@ export async function mergeRegistryWithKV(index: any) {
                 if (checkedInIds && checkedInIds.length > 0) {
                     // Update count accurately
                     event.checkedInGuests = Math.max(event.checkedInGuests, checkedInIds.length);
+                    
+                    // We can't easily move names here without doing a full guest-list scan,
+                    // but the check-in API already does this for us and updates the index!
+                    // This merge just ensures the counts stay high if the index file is reset.
+                }
+
+                const isCompleted = await kv.get(`status:${category.id}:${event.id}`);
+                if (isCompleted !== null) {
+                    event.completed = !!isCompleted;
                 }
 
                 if (usherNames && usherNames.length > 0) {
