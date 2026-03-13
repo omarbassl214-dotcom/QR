@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+export const dynamic = "force-dynamic";
 import SearchClient, { Guest } from "./SearchClient";
 import fs from "fs";
 import path from "path";

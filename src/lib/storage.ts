@@ -1,10 +1,27 @@
-import { kv } from "@vercel/kv";
+import { createClient } from "@vercel/kv";
 
-// We check for both standard Vercel KV vars and Upstash-specific ones
-export const HAS_DB = !!(
-    (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) ||
-    (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
-);
+// Define all possible environment variable pairs provided by Vercel/Upstash integrations
+const KV_CONFIG = {
+    url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || "",
+    token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || "",
+};
+
+// Create a robust client instance
+export const kv = createClient(KV_CONFIG);
+
+export const HAS_DB = !!(KV_CONFIG.url && KV_CONFIG.token);
+
+/**
+ * Diagnostic check to log DB status in Vercel logs
+ */
+if (typeof window === 'undefined') {
+    console.log("Redis Init Status:", { 
+        HAS_DB, 
+        hasUrl: !!KV_CONFIG.url, 
+        hasToken: !!KV_CONFIG.token,
+        nodeEnv: process.env.NODE_ENV
+    });
+}
 
 export async function getLiveCheckins(categoryId: string, eventId: string): Promise<string[]> {
     if (!HAS_DB) return [];
@@ -78,32 +95,34 @@ export async function mergeRegistryWithKV(index: any) {
 
     try {
         // We iterate through all events and merge their KV data
-        // For production scale, we might want to optimize this with a single scan or multi-get
         for (const category of index.categories) {
             for (const event of category.events) {
                 const checkedInIds = await kv.smembers(`checkins:${category.id}:${event.id}`);
                 const usherNames = await kv.smembers(`ushers:${category.id}:${event.id}`);
 
                 if (checkedInIds && checkedInIds.length > 0) {
-                    // Update counts and names in the index
-                    // Note: We don't have the names for checkedInIds here easily without more KV data 
-                    // or re-scanning, so we at least update the count.
-                    // Actually, let's just stick to the count for the global view.
+                    // Update count accurately
                     event.checkedInGuests = Math.max(event.checkedInGuests, checkedInIds.length);
                 }
 
                 if (usherNames && usherNames.length > 0) {
                     event.usherCount = Math.max(event.usherCount, usherNames.length);
-                    event.usherNames = Array.from(new Set([...event.usherNames, ...usherNames.map(String)]));
+                    // Merge names without duplicates
+                    const existingNames = new Set(event.usherNames || []);
+                    usherNames.forEach((u: any) => existingNames.add(String(u)));
+                    event.usherNames = Array.from(existingNames);
                 }
             }
             
-            // Recalculate category totals
+            // Recalculate category totals based on merged event states
             category.activeCount = category.events.filter((e: any) => !e.completed).length;
             category.doneCount = category.events.filter((e: any) => e.completed).length;
         }
 
         // Recalculate global stats
+        index.globalStats.totalCheckins = index.categories.reduce((acc: number, cat: any) => 
+            acc + cat.events.reduce((eAcc: number, ev: any) => eAcc + ev.checkedInGuests, 0), 0);
+        
         index.globalStats.activeEvents = index.categories.reduce((acc: number, c: any) => acc + c.activeCount, 0);
         index.globalStats.doneEvents = index.categories.reduce((acc: number, c: any) => acc + c.doneCount, 0);
 

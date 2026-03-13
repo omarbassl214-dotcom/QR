@@ -1,4 +1,5 @@
 import fs from "fs";
+export const dynamic = "force-dynamic";
 import path from "path";
 import Link from "next/link";
 import Image from "next/image";

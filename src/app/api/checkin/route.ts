@@ -36,7 +36,7 @@ export async function POST(request: Request) {
             try {
                 fs.writeFileSync(filePath, JSON.stringify(guests, null, 2), "utf8");
             } catch (e) {
-                // Ignore write errors in production (read-only FS)
+                // Ignore write errors in production
             }
         }
 
@@ -46,13 +46,13 @@ export async function POST(request: Request) {
         // Update central registry index for performance
         const { updateIndexEvent } = await import("@/lib/registry");
         
-        const checkedInGuestNames: string[] = [];
-        const unarrivedGuestNames: string[] = [];
         let checkedInCount = 0;
-
+        let checkedInGuestNames: string[] = [];
+        let unarrivedGuestNames: string[] = [];
+        
         guests.forEach((g) => {
             const name = (g as any).name || `${(g as any).firstName || ""} ${(g as any).lastName || ""}`.trim() || `Guest ${g.id}`;
-            if (g.attended) {
+            if (g.attended || g.id === guestId) {
                 checkedInCount++;
                 checkedInGuestNames.push(name);
             } else {
