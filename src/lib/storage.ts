@@ -1,6 +1,6 @@
 import { kv } from "@vercel/kv";
 
-const IS_VERCEL = process.env.VERCEL === "1" || !!process.env.KV_URL;
+const IS_VERCEL = process.env.VERCEL === "1" || !!process.env.KV_URL || !!process.env.REDIS_URL;
 
 export async function getLiveCheckins(categoryId: string, eventId: string): Promise<string[]> {
     if (!IS_VERCEL) return [];
