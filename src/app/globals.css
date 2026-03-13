@@ -31,6 +31,7 @@
 @layer utilities {
   .glass-panel {
     @apply bg-obsidian-light/40 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)];
+    -webkit-backdrop-filter: blur(24px);
   }
   
   .glass-panel-hover {
@@ -52,6 +53,7 @@
   /* Admin Dashboard specific styling */
   .admin-panel {
     @apply bg-admin-card backdrop-blur-2xl border border-admin-border shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500;
+    -webkit-backdrop-filter: blur(40px);
   }
 
   .admin-panel-hover {
@@ -80,7 +82,7 @@
 }
 
 .ambient-orb {
-  @apply fixed rounded-full blur-[120px] pointer-events-none mix-blend-screen animate-[float_20s_ease-in-out_infinite];
+  @apply fixed rounded-full blur-[80px] pointer-events-none mix-blend-screen animate-[float_20s_ease-in-out_infinite];
 }
 
 /* Base resets for animations */
