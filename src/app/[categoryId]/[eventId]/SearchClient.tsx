@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import FloorPlanViewer from "@/components/FloorPlanViewer";
 
@@ -130,7 +131,19 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="text-center space-y-4 px-2"
             >
-                <p className="text-[10px] sm:text-xs text-gold tracking-[0.2em] font-medium uppercase">Find Your Table</p>
+                <div className="flex justify-center mb-2">
+                    <div className="relative w-16 h-16 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-gold/10 blur-xl rounded-full" />
+                        <Image 
+                            src="/images/logo.png" 
+                            alt="Perfect Protocol Logo" 
+                            width={64} 
+                            height={64} 
+                            className="relative z-10 object-contain drop-shadow-[0_0_10px_rgba(212,175,55,0.2)] mix-blend-screen"
+                        />
+                    </div>
+                </div>
+                <p className="text-[9px] sm:text-[10px] text-gold tracking-[0.3em] font-medium uppercase opacity-80">Perfect Protocol Presents</p>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-slate-100 tracking-tight leading-tight max-w-sm mx-auto">
                     {eventName}
                 </h1>

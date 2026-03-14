@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 function SignInForm() {
@@ -135,6 +136,18 @@ export default function UsherSignInPage() {
                 className="w-full max-w-md relative z-10"
             >
                 <div className="text-center mb-10">
+                    <div className="flex justify-center mb-6">
+                        <div className="relative w-24 h-24 flex items-center justify-center">
+                            <div className="absolute inset-0 bg-emerald-500/20 blur-2xl rounded-full animate-pulse" />
+                            <Image 
+                                src="/images/logo.png" 
+                                alt="Perfect Protocol Logo" 
+                                width={120} 
+                                height={120} 
+                                className="relative z-10 object-contain drop-shadow-[0_0_12px_rgba(16,185,129,0.4)] mix-blend-screen"
+                            />
+                        </div>
+                    </div>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono tracking-widest uppercase mb-4">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
                         Staff Portal

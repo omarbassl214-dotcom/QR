@@ -4,69 +4,69 @@
     "firstName": "Tariq",
     "lastName": "Mansour",
     "tableNumber": 1,
-    "attended": false
+    "attended": true
   },
   {
     "id": "2",
     "firstName": "Leila",
     "lastName": "Haddad",
     "tableNumber": 1,
-    "attended": false
+    "attended": true
   },
   {
     "id": "3",
     "firstName": "Samir",
     "lastName": "Amin",
     "tableNumber": 2,
-    "attended": false
+    "attended": true
   },
   {
     "id": "4",
     "firstName": "Nour",
     "lastName": "Fahmy",
     "tableNumber": 2,
-    "attended": false
+    "attended": true
   },
   {
     "id": "5",
     "firstName": "Youssef",
     "lastName": "Khalil",
     "tableNumber": 3,
-    "attended": false
+    "attended": true
   },
   {
     "id": "6",
     "firstName": "Aisha",
     "lastName": "Mahmoud",
     "tableNumber": 3,
-    "attended": false
+    "attended": true
   },
   {
     "id": "7",
     "firstName": "Karim",
     "lastName": "Nasr",
     "tableNumber": 4,
-    "attended": false
+    "attended": true
   },
   {
     "id": "8",
     "firstName": "Rania",
     "lastName": "Saad",
     "tableNumber": 4,
-    "attended": false
+    "attended": true
   },
   {
     "id": "9",
     "firstName": "Omar",
     "lastName": "Zaki",
     "tableNumber": 5,
-    "attended": false
+    "attended": true
   },
   {
     "id": "10",
     "firstName": "Hiba",
     "lastName": "Tawfiq",
     "tableNumber": 5,
-    "attended": false
+    "attended": true
   }
 ]

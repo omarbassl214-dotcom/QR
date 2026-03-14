@@ -2,6 +2,7 @@ import fs from "fs";
 export const dynamic = "force-dynamic";
 import path from "path";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import AdminEventList from "@/components/AdminEventList";
 import { getRegistryIndex } from "@/lib/registry";
@@ -31,13 +32,22 @@ export default async function AdminCategoryPage({ params }: { params: Promise<{ 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
                         </Link>
                         <div className="h-6 w-px bg-admin-border mobile-hide"></div>
-                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                            <div className="w-8 h-8 rounded-lg bg-admin-accent/20 border border-admin-accent/30 flex items-center justify-center shrink-0 mobile-hide">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-admin-accent" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <Link href="/" className="group flex items-center gap-2 sm:gap-3 min-w-0">
+                            <div className="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shrink-0">
+                                <div className="absolute inset-0 bg-admin-accent/20 blur-lg group-hover:bg-admin-accent/40 transition-all duration-700 rounded-full" />
+                                <Image 
+                                    src="/images/logo.png" 
+                                    alt="Perfect Protocol Logo" 
+                                    width={40} 
+                                    height={40} 
+                                    className="relative z-10 object-contain drop-shadow-[0_0_8px_rgba(56,189,248,0.5)] mix-blend-screen"
+                                />
                             </div>
-                            <span className="font-serif text-base sm:text-lg font-medium text-luxury-gold tracking-tight truncate">Perfect Protocol</span>
-                            <span className="font-sans text-[10px] tracking-widest uppercase text-slate-500 hidden md:inline ml-2 truncate">/ {categoryName}</span>
-                        </div>
+                            <div className="flex flex-col min-w-0">
+                                <span className="font-serif text-base sm:text-lg font-medium text-luxury-gold tracking-tight leading-none mb-1 group-hover:text-white transition-colors truncate">Perfect Protocol</span>
+                                <span className="text-[8px] uppercase tracking-[0.2em] text-admin-accent/50 font-bold leading-none truncate">{categoryName} Dataset</span>
+                            </div>
+                        </Link>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                         <Link 

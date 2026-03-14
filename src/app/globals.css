@@ -21,9 +21,10 @@
 
 @layer base {
   body {
-    background-color: var(--color-obsidian);
+    background-color: #050505; /* Deeper black for marble contrast */
     color: #F8FAFC;
     font-family: var(--font-sans);
+    overflow-x: hidden;
   }
 }
 

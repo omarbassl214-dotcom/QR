@@ -17,12 +17,23 @@ export default async function AdminDashboard() {
       {/* Admin Top Navigation */}
       <nav className="w-full border-b border-admin-border bg-admin-card/50 backdrop-blur-md relative z-50 sticky top-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-admin-accent/20 border border-admin-accent/30 flex items-center justify-center shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-admin-accent" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <span className="font-serif text-base sm:text-lg font-medium text-luxury-gold tracking-tight sm:tracking-wide truncate max-w-[100px] sm:max-w-none">Perfect Protocol</span>
-            <span className="font-sans text-[9px] sm:text-xs tracking-[0.1em] sm:tracking-[0.15em] uppercase text-admin-accent px-2 py-0.5 sm:px-3 sm:py-1 bg-admin-accent/10 rounded-full border border-admin-accent/20 mobile-hide">Admin Control</span>
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            <Link href="/" className="group flex items-center gap-3">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+                <div className="absolute inset-0 bg-admin-accent/20 blur-xl group-hover:bg-admin-accent/40 transition-all duration-700 rounded-full" />
+                <Image 
+                  src="/images/logo.png" 
+                  alt="Perfect Protocol Logo" 
+                  width={48} 
+                  height={48} 
+                  className="relative z-10 object-contain drop-shadow-[0_0_8px_rgba(56,189,248,0.5)] group-hover:scale-110 transition-transform duration-500 mix-blend-screen"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-serif text-lg sm:text-xl font-medium text-luxury-gold tracking-tight group-hover:text-white transition-colors">Perfect Protocol</span>
+                <span className="text-[9px] uppercase tracking-[0.3em] text-admin-accent/60 group-hover:text-admin-accent transition-colors font-bold">Registry System</span>
+              </div>
+            </Link>
           </div>
           
           <div className="flex items-center gap-2 sm:gap-4 ml-2 shrink-0">

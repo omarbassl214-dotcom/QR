@@ -17,13 +17,12 @@
           "id": "ahmad-sara",
           "name": "Ahmad Sara",
           "totalGuests": 10,
-          "checkedInGuests": 0,
+          "checkedInGuests": 10,
           "completed": false,
           "publicPath": "/weddings/ahmad-sara",
           "usherPath": "/usher/weddings/ahmad-sara",
           "usherCount": 0,
-          "checkedInGuestNames": [],
-          "unarrivedGuestNames": [
+          "checkedInGuestNames": [
             "Tariq Mansour",
             "Leila Haddad",
             "Samir Amin",
@@ -35,6 +34,7 @@
             "Omar Zaki",
             "Hiba Tawfiq"
           ],
+          "unarrivedGuestNames": [],
           "usherNames": []
         },
         {
@@ -342,5 +342,5 @@
       ]
     }
   ],
-  "lastSynced": "2026-03-13T23:48:43.991Z"
+  "lastSynced": "2026-03-14T00:10:26.459Z"
 }
