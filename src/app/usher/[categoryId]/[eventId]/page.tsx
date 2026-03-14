@@ -68,7 +68,7 @@ export default function UsherCheckInPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="w-full max-w-md relative z-10"
             >
-                <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-10 shadow-2xl overflow-hidden relative">
+                <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2rem] sm:rounded-[2.5rem] p-8 sm:p-10 shadow-2xl overflow-hidden relative">
                     <AnimatePresence mode="wait">
                         {status === "loading" && (
                             <motion.div 
@@ -76,28 +76,31 @@ export default function UsherCheckInPage() {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="flex flex-col items-center gap-6 py-8"
+                                className="flex flex-col items-center gap-6 py-12"
                             >
                                 <div className="relative">
-                                    <div className="w-16 h-16 border-2 border-emerald-500/20 rounded-full"></div>
+                                    <div className="w-16 h-16 border-2 border-emerald-500/10 rounded-full"></div>
                                     <div className="absolute inset-0 w-16 h-16 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
                                 </div>
-                                <p className="text-slate-400 font-mono text-[10px] uppercase tracking-widest animate-pulse">Processing Check-in...</p>
+                                <div className="space-y-2 text-center">
+                                    <p className="text-slate-400 font-mono text-[10px] uppercase tracking-[0.2em] animate-pulse">Syncing Payload</p>
+                                    <p className="text-[9px] text-slate-600 uppercase tracking-widest">Perfect Protocol Secure Node</p>
+                                </div>
                             </motion.div>
                         )}
 
                         {status === "success" && (
                             <motion.div 
                                 key="success"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
                                 className="text-center space-y-8"
                             >
-                                <div className="w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
+                                <div className="w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.1)]">
                                     <motion.svg 
                                         initial={{ pathLength: 0 }}
                                         animate={{ pathLength: 1 }}
-                                        transition={{ duration: 0.5, delay: 0.2 }}
+                                        transition={{ duration: 0.6, ease: "easeOut" }}
                                         xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400"
                                     >
                                         <path d="M20 6 9 17l-5-5"/>
@@ -105,13 +108,13 @@ export default function UsherCheckInPage() {
                                 </div>
                                 <div className="space-y-2">
                                     <h2 className="text-3xl font-serif text-white tracking-tight">Access Granted</h2>
-                                    <p className="text-slate-400 text-sm font-sans tracking-wide">
-                                        Welcome, <span className="text-white font-medium">{usherName}</span>. Your arrival has been logged.
+                                    <p className="text-slate-400 text-sm font-sans tracking-wide px-2">
+                                        Welcome, <span className="text-emerald-400 font-medium">{usherName}</span>. Your arrival has been authorized and logged.
                                     </p>
                                 </div>
-                                <div className="pt-4">
-                                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 text-black text-[10px] font-bold uppercase tracking-widest">
-                                        Active Duty
+                                <div className="pt-2">
+                                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 text-black text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-emerald-500/20">
+                                        Staff On Duty
                                     </div>
                                 </div>
                             </motion.div>
@@ -120,21 +123,21 @@ export default function UsherCheckInPage() {
                         {status === "already" && (
                             <motion.div 
                                 key="already"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
                                 className="text-center space-y-8"
                             >
-                                <div className="w-24 h-24 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto">
+                                <div className="w-24 h-24 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(59,130,246,0.1)]">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
                                 </div>
                                 <div className="space-y-2">
-                                    <h2 className="text-3xl font-serif text-white tracking-tight">Already Synchronized</h2>
+                                    <h2 className="text-3xl font-serif text-white tracking-tight">Active Session</h2>
                                     <p className="text-slate-400 text-sm font-sans tracking-wide">
-                                        You are already checked in for this event, <span className="text-white font-medium">{usherName}</span>.
+                                        You are already checked in, <span className="text-blue-400 font-medium">{usherName}</span>. Proceed to your station.
                                     </p>
                                 </div>
-                                <div className="h-1 w-24 bg-blue-500/20 rounded-full mx-auto relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-blue-500 animate-[shimmer_2s_infinite]"></div>
+                                <div className="h-1 w-24 bg-blue-500/10 rounded-full mx-auto relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-blue-500/40 animate-[shimmer_2s_infinite]"></div>
                                 </div>
                             </motion.div>
                         )}
@@ -152,11 +155,11 @@ export default function UsherCheckInPage() {
                                 <div className="space-y-2">
                                     <h2 className="text-2xl font-serif text-white tracking-tight">Identity Required</h2>
                                     <p className="text-slate-400 text-sm font-sans tracking-wide px-4">
-                                        No registered identity found for this device. Redirecting to sign-in page...
+                                        No authorized staff identity found. Redirecting to terminal registration...
                                     </p>
                                 </div>
-                                <Link href="/usher/sign-in" className="inline-block text-xs uppercase tracking-widest text-emerald-400 hover:text-white transition-colors border-b border-emerald-400/30 pb-1">
-                                    Register Now
+                                <Link href="/usher/sign-in" className="inline-block text-[10px] uppercase tracking-widest text-emerald-400 hover:text-white transition-colors border-b border-emerald-400/30 pb-1 font-bold">
+                                    Open Registration
                                 </Link>
                             </motion.div>
                         )}
@@ -172,16 +175,16 @@ export default function UsherCheckInPage() {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-red-400"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                 </div>
                                 <div className="space-y-2">
-                                    <h2 className="text-2xl font-serif text-white tracking-tight">System Error</h2>
+                                    <h2 className="text-2xl font-serif text-white tracking-tight">Protocol Error</h2>
                                     <p className="text-slate-400 text-sm font-sans tracking-wide">
-                                        We encountered a problem while processing your check-in. Please try again or contact support.
+                                        System synchronization failed. This node could not reach the primary server.
                                     </p>
                                 </div>
                                 <button
                                     onClick={() => performCheckIn(usherName!)}
-                                    className="w-full bg-white/5 border border-white/10 text-white font-sans uppercase tracking-widest font-bold py-3 rounded-2xl hover:bg-white/10 transition-all"
+                                    className="w-full bg-white/5 border border-white/10 text-white text-xs font-sans uppercase tracking-widest font-bold py-4 rounded-2xl hover:bg-white/10 transition-all active:scale-[0.98]"
                                 >
-                                    Retry Check-in
+                                    Retry Authorization
                                 </button>
                             </motion.div>
                         )}

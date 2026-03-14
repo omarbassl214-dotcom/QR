@@ -21,24 +21,21 @@
           "completed": false,
           "publicPath": "/weddings/ahmad-sara",
           "usherPath": "/usher/weddings/ahmad-sara",
-          "usherCount": 2,
+          "usherCount": 0,
           "checkedInGuestNames": [],
           "unarrivedGuestNames": [
-            "Aisha Mahmoud",
             "Tariq Mansour",
             "Leila Haddad",
             "Samir Amin",
             "Nour Fahmy",
             "Youssef Khalil",
+            "Aisha Mahmoud",
             "Karim Nasr",
             "Rania Saad",
             "Omar Zaki",
             "Hiba Tawfiq"
           ],
-          "usherNames": [
-            "omar basil",
-            "Final Check Usher"
-          ]
+          "usherNames": []
         },
         {
           "id": "arabic-test",
@@ -55,9 +52,8 @@
             "سلوى شكوكاني",
             "عبير شحادة",
             "موسى شكوكاني",
-            "أسماء جابر",
-            "زوجة انور العسعس",
             "نبيلة شحادة",
+            "أسماء جابر",
             "احمد سبيتان",
             "مي جابر",
             "عبير النجار",
@@ -266,7 +262,8 @@
             "زوجة احمد عدنان ا لعسعس",
             "ابنة حميد حميدة",
             "انور العسعس",
-            "ابنة حميد حميدة"
+            "ابنة حميد حميدة",
+            "زوجة انور العسعس"
           ],
           "usherNames": []
         },
@@ -345,5 +342,5 @@
       ]
     }
   ],
-  "lastSynced": "2026-03-13T03:02:55.145Z"
+  "lastSynced": "2026-03-13T23:48:43.991Z"
 }

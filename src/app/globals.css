@@ -63,6 +63,31 @@
   .admin-text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-200 via-white to-slate-400;
   }
+
+  /* Mobile Responsive Utilities */
+  .mobile-icon-only {
+    @apply flex items-center justify-center p-2 rounded-xl transition-all duration-300 sm:px-4 sm:py-2 sm:rounded-lg;
+  }
+  
+  .mobile-text-hidden {
+    @apply hidden sm:inline;
+  }
+
+  .mobile-hide {
+    @apply hidden sm:block;
+  }
+
+  .mobile-p-4 {
+    @apply p-4 sm:p-8;
+  }
+
+  .mobile-gap-4 {
+    @apply gap-4 sm:gap-8;
+  }
+
+  .mobile-text-2xl {
+    @apply text-2xl sm:text-3xl;
+  }
 }
 
 @keyframes shimmer {

@@ -181,81 +181,87 @@ export default function AdminEventList({
                             </div>
                         </div>
                         
-                        <div className="flex flex-col sm:flex-row flex-wrap items-center gap-3 w-full lg:w-auto mt-4 lg:mt-0 relative z-10">
-                            <div className="flex flex-col sm:flex-row items-center gap-6 sm:pr-8 sm:border-r border-admin-border w-full sm:w-auto border-b sm:border-b-0 pb-6 sm:pb-0">
-                                <div className="flex flex-col items-center sm:items-end min-w-[80px]">
-                                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                        <div className="flex flex-col sm:flex-row flex-wrap items-center gap-4 w-full lg:w-auto mt-6 lg:mt-0 relative z-10 min-w-0">
+                            <div className="grid grid-cols-1 sm:flex sm:flex-row items-center gap-4 sm:gap-6 sm:pr-8 sm:border-r border-admin-border w-full sm:w-auto border-b sm:border-b-0 pb-6 sm:pb-0">
+                                <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center min-w-[80px] w-full sm:w-auto px-4 sm:px-0">
+                                    <p className="text-[10px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-widest sm:mb-1.5 flex items-center gap-1.5">
                                         Total
                                     </p>
-                                    <span className="text-2xl font-sans font-light text-slate-400">{event.totalGuests}</span>
+                                    <span className="text-xl sm:text-2xl font-sans font-light text-slate-400">{event.totalGuests}</span>
                                 </div>
 
                                 <div className="hidden sm:block w-px h-8 bg-admin-border/50"></div>
 
                                 <button 
                                     onClick={() => openModal(`Attended - ${event.name}`, event.checkedInGuestNames || [], "No guests have checked in yet.")}
-                                    className="flex flex-col items-center sm:items-end min-w-[80px] group/stat"
+                                    className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center min-w-[80px] w-full sm:w-auto group/stat px-4 sm:px-0"
                                 >
-                                    <p className="text-[9px] font-bold text-emerald-400/70 uppercase tracking-widest mb-1.5 flex items-center gap-1.5 group-hover/stat:text-emerald-400 transition-colors">
+                                    <p className="text-[10px] sm:text-[9px] font-bold text-emerald-400/70 uppercase tracking-widest sm:mb-1.5 flex items-center gap-1.5 group-hover/stat:text-emerald-400 transition-colors">
                                         Attended
                                     </p>
-                                    <span className="text-2xl font-sans font-light text-emerald-400">{event.checkedInGuests}</span>
-                                    <span className="text-[8px] uppercase tracking-tighter text-emerald-500/40 font-bold mt-1 group-hover/stat:text-emerald-500/80 transition-colors">Click to View</span>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-xl sm:text-2xl font-sans font-light text-emerald-400">{event.checkedInGuests}</span>
+                                        <span className="text-[8px] uppercase tracking-tighter text-emerald-500/40 font-bold hidden sm:block group-hover/stat:text-emerald-500/80 transition-colors">View</span>
+                                    </div>
                                 </button>
 
                                 <div className="hidden sm:block w-px h-8 bg-admin-border/50"></div>
 
                                 <button 
                                     onClick={() => openModal(`Pending - ${event.name}`, event.unarrivedGuestNames || [], "All guests have arrived!")}
-                                    className="flex flex-col items-center sm:items-end min-w-[80px] group/stat"
+                                    className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center min-w-[80px] w-full sm:w-auto group/stat px-4 sm:px-0"
                                 >
-                                    <p className="text-[9px] font-bold text-orange-400/70 uppercase tracking-widest mb-1.5 flex items-center gap-1.5 group-hover/stat:text-orange-400 transition-colors">
+                                    <p className="text-[10px] sm:text-[9px] font-bold text-orange-400/70 uppercase tracking-widest sm:mb-1.5 flex items-center gap-1.5 group-hover/stat:text-orange-400 transition-colors">
                                         Pending
                                     </p>
-                                    <span className="text-2xl font-sans font-light text-orange-400">{event.totalGuests - event.checkedInGuests}</span>
-                                    <span className="text-[8px] uppercase tracking-tighter text-orange-500/40 font-bold mt-1 group-hover/stat:text-orange-500/80 transition-colors">Click to View</span>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-xl sm:text-2xl font-sans font-light text-orange-400">{event.totalGuests - event.checkedInGuests}</span>
+                                        <span className="text-[8px] uppercase tracking-tighter text-orange-500/40 font-bold hidden sm:block group-hover/stat:text-orange-500/80 transition-colors">View</span>
+                                    </div>
                                 </button>
                             </div>
                             
                             <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                                <StatusToggle categoryId={categoryId} eventId={event.id} />
+                                <div className="w-full sm:w-auto">
+                                    <StatusToggle categoryId={categoryId} eventId={event.id} />
+                                </div>
 
-                                <div className="flex flex-col gap-2 w-full sm:w-auto">
-                                    <a href={event.publicPath} target="_blank" rel="noreferrer" className="w-full sm:w-44 h-fit text-[11px] font-sans uppercase tracking-widest font-bold text-admin-accent hover:text-white bg-admin-accent/10 hover:bg-admin-accent/20 border border-admin-accent/30 hover:border-admin-accent/50 px-6 py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/btn whitespace-nowrap">
+                                <div className="grid grid-cols-2 sm:flex sm:flex-col gap-2 w-full sm:w-auto">
+                                    <a href={event.publicPath} target="_blank" rel="noreferrer" className="w-full sm:w-44 h-fit text-[11px] font-sans uppercase tracking-widest font-bold text-admin-accent hover:text-white bg-admin-accent/10 hover:bg-admin-accent/20 border border-admin-accent/30 hover:border-admin-accent/50 px-4 py-3 sm:px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/btn whitespace-nowrap">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover/btn:rotate-12 transition-transform"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-                                        Guest Portal
+                                        Portal
                                     </a>
 
-                                    <Link href={event.usherPath} className="w-full sm:w-44 h-fit text-[11px] font-sans uppercase tracking-widest font-bold text-emerald-400 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 hover:border-emerald-500/50 px-6 py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/usher whitespace-nowrap">
+                                    <Link href={event.usherPath} className="w-full sm:w-44 h-fit text-[11px] font-sans uppercase tracking-widest font-bold text-emerald-400 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 hover:border-emerald-500/50 px-4 py-3 sm:px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/usher whitespace-nowrap">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover/usher:scale-110 transition-transform"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                        Usher Node
+                                        Usher
                                     </Link>
                                 </div>
 
-                                <div className="flex flex-col gap-2 w-full sm:w-auto">
-                                    <Link href={`/admin/${categoryId}/${event.id}/map`} className="w-full sm:w-44 h-fit text-[11px] font-sans uppercase tracking-widest font-bold text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-6 py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/map whitespace-nowrap">
+                                <div className="grid grid-cols-2 sm:flex sm:flex-col gap-2 w-full sm:w-auto">
+                                    <Link href={`/admin/${categoryId}/${event.id}/map`} className="w-full sm:w-44 h-fit text-[11px] font-sans uppercase tracking-widest font-bold text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-4 py-3 sm:px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/map whitespace-nowrap">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover/map:scale-110 transition-transform"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-                                        Edit Map
+                                        Map
                                     </Link>
                                     
                                     <button 
                                         onClick={() => openModal(`Staff on duty - ${event.name}`, event.usherNames || [], "No staff members on duty yet.")}
-                                        className="w-full sm:w-44 px-4 py-2 bg-black/20 rounded-xl border border-white/5 flex flex-col items-center justify-center hover:bg-emerald-500/5 hover:border-emerald-500/20 transition-all group/usherstat"
+                                        className="w-full sm:w-44 px-3 py-2 bg-black/20 rounded-xl border border-white/5 flex flex-row sm:flex-col items-center justify-between sm:justify-center hover:bg-emerald-500/5 hover:border-emerald-500/20 transition-all group/usherstat"
                                     >
-                                        <p className="text-[9px] uppercase tracking-widest text-slate-500 font-bold group-hover/usherstat:text-emerald-500/70 transition-colors">On The Job</p>
-                                        <p className="text-lg font-sans font-light text-emerald-400">{event.usherCount}</p>
-                                        <p className="text-[8px] uppercase tracking-tighter text-slate-600 font-bold group-hover/usherstat:text-emerald-500/40 transition-colors">Click to View</p>
+                                        <p className="text-[9px] uppercase tracking-widest text-slate-500 font-bold group-hover/usherstat:text-emerald-500/70 transition-colors">Staff</p>
+                                        <p className="text-base sm:text-lg font-sans font-light text-emerald-400">{event.usherCount}</p>
+                                        <p className="text-[8px] uppercase tracking-tighter text-slate-600 font-bold group-hover/usherstat:text-emerald-500/40 transition-colors hidden sm:block">View</p>
                                     </button>
                                 </div>
                             </div>
                         
-                            <div className="shrink-0 pl-0 sm:pl-8 border-t sm:border-t-0 sm:border-l border-admin-border pt-6 sm:pt-0 w-full sm:w-auto flex flex-row items-center gap-4">
+                            <div className="shrink-0 sm:pl-8 border-t sm:border-t-0 sm:border-l border-admin-border pt-6 sm:pt-0 w-full sm:w-auto flex flex-row items-center justify-center sm:justify-start gap-6 sm:gap-4">
                                 <div className="flex flex-col items-center">
                                     <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                                         Guest Node
                                     </p>
                                     <div className="bg-white/5 p-1 rounded-lg border border-white/5 group-hover:border-admin-accent/30 transition-colors">
-                                        <QRCodeDisplay path={event.publicPath} eventName={event.name} size={64} />
+                                        <QRCodeDisplay path={event.publicPath} eventName={event.name} size={60} />
                                     </div>
                                 </div>
 
@@ -264,7 +270,7 @@ export default function AdminEventList({
                                         Usher Node
                                     </p>
                                     <div className="bg-white/5 p-1 rounded-lg border border-white/5 group-hover:border-emerald-500/30 transition-colors">
-                                        <QRCodeDisplay path={event.usherPath} eventName={`${event.name} - Usher`} size={64} />
+                                        <QRCodeDisplay path={event.usherPath} eventName={`${event.name} - Usher`} size={60} />
                                     </div>
                                 </div>
                             </div>

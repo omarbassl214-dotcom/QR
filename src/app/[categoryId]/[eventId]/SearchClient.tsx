@@ -106,21 +106,21 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
     };
 
     return (
-        <div className="w-full max-w-lg mx-auto p-6 space-y-12 mt-8 mb-20">
+        <div className="w-full max-w-lg mx-auto px-4 sm:px-6 space-y-8 sm:space-y-12 mt-4 sm:mt-8 mb-20">
             {/* Top Stat Banner */}
             <motion.div 
                  initial={{ opacity: 0, y: -20 }}
                  animate={{ opacity: 1, y: 0 }}
-                 className="flex items-center justify-between px-6 py-4 bg-obsidian-light/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg"
+                 className="flex items-center justify-between px-5 py-3 sm:px-6 sm:py-4 bg-obsidian-light/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg"
             >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                     <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-mono uppercase tracking-widest text-slate-400">Live Attendance</span>
+                    <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-slate-400">Live Attendance</span>
                 </div>
                 <div className="text-right">
-                    <span className="text-2xl font-sans font-light text-white">{checkedInCount}</span>
-                    <span className="text-sm font-sans text-slate-500 mx-1">/</span>
-                    <span className="text-sm font-sans text-slate-500">{totalCount}</span>
+                    <span className="text-xl sm:text-2xl font-sans font-light text-white">{checkedInCount}</span>
+                    <span className="text-xs sm:text-sm font-sans text-slate-500 mx-1">/</span>
+                    <span className="text-xs sm:text-sm font-sans text-slate-500">{totalCount}</span>
                 </div>
             </motion.div>
 
@@ -128,13 +128,13 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="text-center space-y-4"
+                className="text-center space-y-4 px-2"
             >
-                <p className="text-xs text-gold tracking-[0.2em] font-medium uppercase">Find Your Table</p>
-                <h1 className="text-4xl md:text-5xl font-serif text-slate-100 tracking-tight leading-tight max-w-sm mx-auto">
+                <p className="text-[10px] sm:text-xs text-gold tracking-[0.2em] font-medium uppercase">Find Your Table</p>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-slate-100 tracking-tight leading-tight max-w-sm mx-auto">
                     {eventName}
                 </h1>
-                <div className="w-12 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent mx-auto mt-6" />
+                <div className="w-12 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent mx-auto mt-4 sm:mt-6" />
             </motion.div>
 
             <motion.div
@@ -151,8 +151,8 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                         onChange={(e) => setQuery(e.target.value)}
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
-                        placeholder="Enter your first or last name..."
-                        className="w-full px-6 py-5 bg-obsidian-light/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl focus:outline-none focus:bg-obsidian-light/80 text-lg text-white placeholder-slate-500 transition-all duration-300 ring-0 focus:border-gold/30 font-sans"
+                        placeholder="Enter your name..."
+                        className="w-full px-5 py-4 sm:px-6 sm:py-5 bg-obsidian-light/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl focus:outline-none focus:bg-obsidian-light/80 text-base sm:text-lg text-white placeholder-slate-500 transition-all duration-300 ring-0 focus:border-gold/30 font-sans"
                     />
                     <AnimatePresence>
                         {query && (
@@ -161,7 +161,7 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, scale: 0.8 }}
                                 onClick={() => setQuery("")}
-                                className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors p-2"
+                                className="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors p-2"
                                 aria-label="Clear search"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
@@ -171,7 +171,7 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                 </div>
             </motion.div>
 
-            <div className="relative z-10 min-h-[400px]">
+            <div className="relative z-10 min-h-[40vh]">
                 <AnimatePresence mode="popLayout">
                     {query.trim() === "" ? (
                         <motion.div
@@ -179,9 +179,9 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0, filter: "blur(5px)" }}
-                            className="text-center p-8 pt-16"
+                            className="text-center p-8 pt-12 sm:pt-16"
                         >
-                            <p className="text-slate-500 font-sans tracking-wide">Enter your name above to reveal your seating arrangement.</p>
+                            <p className="text-sm sm:text-base text-slate-500 font-sans tracking-wide">Enter your name above to reveal your seating arrangement.</p>
                         </motion.div>
                     ) : filteredGuests.length > 0 ? (
                         <motion.div
@@ -190,56 +190,56 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                             initial="hidden"
                             animate="show"
                             exit="exit"
-                            className="space-y-6"
+                            className="space-y-4 sm:space-y-6"
                         >
                             {filteredGuests.map((guest) => (
                                 <motion.div
                                     key={guest.id}
                                     variants={itemVars}
                                     layoutId={`card-${guest.id}`}
-                                    className="glass-panel glass-panel-hover rounded-2xl p-8 relative overflow-hidden"
+                                    className="glass-panel glass-panel-hover rounded-2xl p-6 sm:p-8 relative overflow-hidden"
                                 >
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
                                     <div className="flex flex-col items-center justify-center space-y-4 text-center">
                                         <div className="space-y-1">
-                                            <p className="text-gold/80 text-sm font-sans uppercase tracking-[0.15em]">Welcome</p>
-                                            <h2 className="text-3xl font-serif text-white tracking-wide">{guest.firstName} <span className="font-light text-slate-300">{guest.lastName}</span></h2>
+                                            <p className="text-gold/80 text-[10px] sm:text-xs font-sans uppercase tracking-[0.2em]">Guest Identity</p>
+                                            <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-wide">{guest.firstName} <span className="font-light text-slate-300">{guest.lastName}</span></h2>
                                         </div>
 
-                                        <div className="w-full h-px bg-white/10 my-4" />
+                                        <div className="w-full h-px bg-white/10 my-2 sm:my-4" />
 
-                                        <div className="flex flex-col w-full max-w-sm mx-auto gap-4">
-                                            <div className="flex items-center justify-between gap-4">
-                                                <div className="space-y-2 flex-1">
-                                                    <p className="text-slate-400 text-sm font-sans uppercase tracking-[0.1em]">Table</p>
-                                                    <div className="flex items-center justify-center min-h-[50px]">
-                                                        <div className="text-5xl font-sans font-light text-white tracking-tighter drop-shadow-md">
+                                        <div className="flex flex-col w-full max-w-xs sm:max-w-sm mx-auto gap-3 sm:gap-4">
+                                            <div className="grid grid-cols-2 gap-4 items-center">
+                                                <div className="space-y-1 sm:space-y-2">
+                                                    <p className="text-slate-500 text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em]">Table</p>
+                                                    <div className="flex items-center justify-center">
+                                                        <div className="text-4xl sm:text-5xl font-sans font-light text-white tracking-tighter drop-shadow-lg">
                                                             {guest.tableNumber}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 
-                                                <div className="space-y-2 flex-1 flex flex-col items-center border-l border-white/10 pl-4">
-                                                    <p className="text-slate-400 text-[10px] font-sans uppercase tracking-[0.1em] mb-1">Status</p>
-                                                    <div className="flex items-center justify-center min-h-[50px] w-full">
+                                                <div className="space-y-1 sm:space-y-2 flex flex-col items-center border-l border-white/10 pl-4">
+                                                    <p className="text-slate-500 text-[10px] font-sans uppercase tracking-[0.1em]">Status</p>
+                                                    <div className="flex items-center justify-center w-full min-h-[44px]">
                                                         {guest.attended ? (
-                                                            <div className="w-full py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex flex-col items-center justify-center gap-1">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400"><path d="M20 6 9 17l-5-5"/></svg>
-                                                                <span className="text-[10px] font-medium text-emerald-400 tracking-wide uppercase">In Venue</span>
+                                                            <div className="w-full py-2 px-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col items-center justify-center gap-0.5">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400"><path d="M20 6 9 17l-5-5"/></svg>
+                                                                <span className="text-[9px] font-bold text-emerald-400 tracking-widest uppercase">Venue In</span>
                                                             </div>
                                                         ) : (
                                                             <button
                                                                 onClick={() => handleCheckIn(guest.id)}
                                                                 disabled={checkingIn === guest.id}
-                                                                className="w-full py-2 px-3 rounded-lg bg-gold/10 hover:bg-gold/20 border border-gold/30 hover:border-gold/50 transition-all duration-300 flex flex-col items-center justify-center gap-1 group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer relative z-30"
+                                                                className="w-full py-2 px-2 rounded-xl bg-gold/10 hover:bg-gold/20 border border-gold/30 hover:border-gold/50 transition-all duration-300 flex flex-col items-center justify-center gap-0.5 group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer relative z-30"
                                                             >
                                                                 {checkingIn === guest.id ? (
-                                                                    <div className="w-4 h-4 border-2 border-gold/30 border-t-gold rounded-full animate-spin"></div>
+                                                                    <div className="w-3.5 h-3.5 border-2 border-gold/30 border-t-gold rounded-full animate-spin"></div>
                                                                 ) : (
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold group-hover:scale-110 transition-transform"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gold group-hover:scale-110 transition-transform"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
                                                                 )}
-                                                                <span className="text-[10px] font-medium text-gold tracking-wide uppercase">Check In</span>
+                                                                <span className="text-[9px] font-bold text-gold tracking-widest uppercase">Arrival</span>
                                                             </button>
                                                         )}
                                                     </div>
@@ -251,10 +251,10 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                                                     setSelectedTable(guest.tableNumber);
                                                     setIsFloorPlanOpen(true);
                                                 }}
-                                                className="w-full py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2 group mt-2 relative z-30"
+                                                className="w-full py-3 sm:py-4 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-3 group mt-1 relative z-30"
                                             >
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 group-hover:text-white transition-colors"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-                                                <span className="text-xs font-medium text-slate-300 tracking-widest uppercase">View Floor Plan</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 group-hover:text-gold transition-colors"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                                                <span className="text-[10px] sm:text-xs font-bold text-slate-300 group-hover:text-white tracking-[0.2em] uppercase transition-colors">Digital Roadmap</span>
                                             </button>
                                         </div>
                                     </div>

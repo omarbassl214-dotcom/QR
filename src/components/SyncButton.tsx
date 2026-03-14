@@ -36,12 +36,12 @@ export default function SyncButton() {
         >
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                width="12" 
-                height="12" 
+                width="14" 
+                height="14" 
                 viewBox="0 0 24 24" 
                 fill="none" 
                 stroke="currentColor" 
-                strokeWidth="2" 
+                strokeWidth="2.5" 
                 strokeLinecap="round" 
                 strokeLinejoin="round" 
                 className={isSyncing ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-700"}
@@ -49,7 +49,8 @@ export default function SyncButton() {
                 <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
                 <polyline points="21 3 21 8 16 8" />
             </svg>
-            {isSyncing ? "Syncing..." : "Force Sync"}
+            <span className="hidden sm:inline">{isSyncing ? "Syncing..." : "Force Sync"}</span>
+            {isSyncing && <span className="sm:hidden">...</span>}
         </button>
     );
 }

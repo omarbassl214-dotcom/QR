@@ -22,7 +22,7 @@ export default function DashboardStats({ totalManaged, activeNow, completed }: D
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-        <div className="admin-panel p-8 rounded-2xl border-l-4 border-l-admin-accent/40 group hover:border-l-admin-accent transition-all duration-500">
+        <div className="admin-panel p-6 sm:p-8 rounded-2xl border-l-4 border-l-admin-accent/40 group hover:border-l-admin-accent transition-all duration-500">
            <div className="flex justify-between items-start mb-4">
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Global Guest Volume</p>
               <div className="text-admin-accent/50 group-hover:text-admin-accent transition-colors">
@@ -30,14 +30,14 @@ export default function DashboardStats({ totalManaged, activeNow, completed }: D
               </div>
            </div>
            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-sans font-light text-white tracking-tight">
+              <span className="text-4xl sm:text-5xl font-sans font-light text-white tracking-tight">
                 <AnimatedNumber value={totalManaged} />
               </span>
-              <span className="text-xs text-slate-500 uppercase tracking-widest font-medium">Verified Records</span>
+              <span className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-widest font-medium">Verify</span>
            </div>
         </div>
 
-        <div className="admin-panel p-8 rounded-2xl border-l-4 border-l-emerald-500/30 group hover:border-l-emerald-500 transition-all duration-500">
+        <div className="admin-panel p-6 sm:p-8 rounded-2xl border-l-4 border-l-emerald-500/30 group hover:border-l-emerald-500 transition-all duration-500">
            <div className="flex justify-between items-start mb-4">
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] text-emerald-500/70">Protocol Active Now</p>
               <div className="text-emerald-500/50 group-hover:text-emerald-500 transition-colors">
@@ -45,14 +45,14 @@ export default function DashboardStats({ totalManaged, activeNow, completed }: D
               </div>
            </div>
            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-sans font-light text-white tracking-tight">
+              <span className="text-4xl sm:text-5xl font-sans font-light text-white tracking-tight">
                 <AnimatedNumber value={activeNow} />
               </span>
-              <span className="text-xs text-slate-500 uppercase tracking-widest font-medium">Live Sessions</span>
+              <span className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-widest font-medium">Live</span>
            </div>
         </div>
 
-        <div className="admin-panel p-8 rounded-2xl border-l-4 border-l-slate-500/30 group hover:border-l-slate-400 transition-all duration-500">
+        <div className="admin-panel p-6 sm:p-8 rounded-2xl border-l-4 border-l-slate-500/30 group hover:border-l-slate-400 transition-all duration-500">
            <div className="flex justify-between items-start mb-4">
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Archived Success</p>
               <div className="text-slate-500/50 group-hover:text-slate-400 transition-colors">
@@ -60,10 +60,10 @@ export default function DashboardStats({ totalManaged, activeNow, completed }: D
               </div>
            </div>
            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-sans font-light text-white tracking-tight">
+              <span className="text-4xl sm:text-5xl font-sans font-light text-white tracking-tight">
                 <AnimatedNumber value={completed} />
               </span>
-              <span className="text-xs text-slate-500 uppercase tracking-widest font-medium">Marked Done</span>
+              <span className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-widest font-medium">Done</span>
            </div>
         </div>
       </div>
