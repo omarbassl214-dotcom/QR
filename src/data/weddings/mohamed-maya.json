@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "firstName": "Mohamed",
+    "lastName": "Ali",
+    "tableNumber": 12,
+    "attended": false
+  },
+  {
+    "id": "2",
+    "firstName": "Maya",
+    "lastName": "Hassan",
+    "tableNumber": 1,
+    "attended": false
+  },
+  {
+    "id": "3",
+    "firstName": "Ahmad",
+    "lastName": "Kareem",
+    "tableNumber": 8,
+    "attended": false
+  },
+  {
+    "id": "4",
+    "firstName": "Sarah",
+    "lastName": "Smith",
+    "tableNumber": 8,
+    "attended": false
+  },
+  {
+    "id": "5",
+    "firstName": "Omar",
+    "lastName": "Farooq",
+    "tableNumber": 3,
+    "attended": false
+  },
+  {
+    "id": "6",
+    "firstName": "Laila",
+    "lastName": "Nour",
+    "tableNumber": 12,
+    "attended": false
+  }
+]
