@@ -36,23 +36,30 @@ export async function POST(request: Request) {
             try {
                 fs.writeFileSync(filePath, JSON.stringify(guests, null, 2), "utf8");
             } catch (e) {
-                // Ignore write errors in production (read-only FS)
+                // Ignore write errors in production
             }
         }
 
-        // Always update KV if in Vercel
+        // 1. Add to checkins
         await addLiveCheckin(categoryId, eventId, guestId);
+        
+        const guest = guests[guestIndex];
+        const guestName = (guest as any).name || `${(guest as any).firstName || ""} ${(guest as any).lastName || ""}`.trim() || `Guest ${guest.id}`;
+        
+        // 2. Add to guest names
+        const { addLiveGuestName } = await import("@/lib/storage");
+        await addLiveGuestName(categoryId, eventId, guestId, guestName);
 
-        // Update central registry index for performance
+        // 3. Update central registry index
         const { updateIndexEvent } = await import("@/lib/registry");
         
-        const checkedInGuestNames: string[] = [];
-        const unarrivedGuestNames: string[] = [];
         let checkedInCount = 0;
-
+        let checkedInGuestNames: string[] = [];
+        let unarrivedGuestNames: string[] = [];
+        
         guests.forEach((g) => {
             const name = (g as any).name || `${(g as any).firstName || ""} ${(g as any).lastName || ""}`.trim() || `Guest ${g.id}`;
-            if (g.attended) {
+            if (g.attended || g.id === guestId) {
                 checkedInCount++;
                 checkedInGuestNames.push(name);
             } else {
@@ -64,7 +71,7 @@ export async function POST(request: Request) {
             checkedInGuests: checkedInCount,
             checkedInGuestNames,
             unarrivedGuestNames
-        });
+        }, guestId, guestName);
 
         return NextResponse.json({ success: true, guest: guests[guestIndex] });
     } catch (error: any) {

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+export const dynamic = "force-dynamic";
 import SearchClient, { Guest } from "./SearchClient";
 import fs from "fs";
 import path from "path";
@@ -25,6 +26,13 @@ function capitalize(str: string) {
 export default async function EventPage({ params }: { params: Promise<{ categoryId: string, eventId: string }> }) {
     const resolvedParams = await params;
     const { categoryId, eventId } = resolvedParams;
+
+    // Check if event is marked as deleted in KV
+    const { isEventDeleted } = await import("@/lib/storage");
+    if (await isEventDeleted(categoryId, eventId)) {
+        return notFound();
+    }
+
     const guests = await getEventData(categoryId, eventId);
 
     if (!guests) {
@@ -33,7 +41,9 @@ export default async function EventPage({ params }: { params: Promise<{ category
 
     // Generate a display name dynamically if we don't have a hardcoded map
     let eventName = capitalize(eventId);
-    if (categoryId === "weddings") {
+    if (eventId === "four-seasons-22-3") {
+        eventName = "Four Seasons 22/3 Wedding";
+    } else if (categoryId === "weddings") {
         // Special formatting for weddings e.g. "Mohamed & Maya's Wedding"
         eventName = eventId.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" & ") + "'s Wedding";
     }

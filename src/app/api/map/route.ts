@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { saveMapCoordinates, getMapCoordinates } from "@/lib/storage";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -12,6 +15,13 @@ export async function GET(req: Request) {
     }
 
     try {
+        // Try KV Database First
+        const kvData = await getMapCoordinates(categoryId, eventId);
+        if (kvData && Object.keys(kvData).length > 0) {
+            return NextResponse.json(kvData);
+        }
+
+        // Fallback to local file
         const filePath = path.join(process.cwd(), "src/data/maps", categoryId, `${eventId}.json`);
         if (fs.existsSync(filePath)) {
             const data = fs.readFileSync(filePath, "utf8");
@@ -32,16 +42,20 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
+        // 1. Save to Live Vercel KV Database (for production persistance)
+        await saveMapCoordinates(categoryId, eventId, coordinates);
+
+        // 2. Also gracefully attempt local file save (for dev mode)
         const dirPath = path.join(process.cwd(), "src/data/maps", categoryId);
         if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true });
+            try { fs.mkdirSync(dirPath, { recursive: true }); } catch (e) {}
         }
 
         const filePath = path.join(dirPath, `${eventId}.json`);
         try {
             fs.writeFileSync(filePath, JSON.stringify(coordinates, null, 4), "utf8");
         } catch (e) {
-            // Skip in production
+            // Fails silently in Vercel - that is completely fine since KV caught it.
         }
 
         return NextResponse.json({ success: true });

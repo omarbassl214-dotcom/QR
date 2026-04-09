@@ -44,15 +44,15 @@ export default function StatusToggle({ categoryId, eventId }: { categoryId: stri
             disabled={loading}
             className={`w-full sm:w-44 h-fit text-sm font-sans uppercase tracking-widest font-medium px-6 py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/status border whitespace-nowrap ${
                 completed 
-                ? "bg-slate-800/10 text-slate-500 border-white/5 hover:border-white/10" 
-                : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 hover:border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
+                ? "bg-slate-800/10 text-white border-white/5 hover:border-white/10" 
+                : "bg-brand-green/10 text-white border-brand-green/40 hover:bg-brand-green/20 hover:border-brand-green/60 shadow-[0_0_15px_rgba(0,107,63,0.15)]"
             }`}
         >
             {loading ? (
                 <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
             ) : completed ? (
                 <>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 group-hover/status:scale-110 transition-transform"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white group-hover/status:scale-110 transition-transform"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     Done
                 </>
             ) : (

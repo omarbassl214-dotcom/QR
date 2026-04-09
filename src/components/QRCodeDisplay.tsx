@@ -1,65 +1,68 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
+import { useRef } from "react";
 
-export default function QRCodeDisplay({ 
-    path, 
-    eventName, 
-    size = 120 
-}: { 
-    path: string; 
-    eventName: string;
-    size?: number;
-}) {
-    const qrRef = useRef<HTMLDivElement>(null);
-    const [fullUrl, setFullUrl] = useState("");
+export default function QRCodeDisplay({ path, eventName, size = 150 }: { path: string, eventName: string, size?: number }) {
+    const canvasRef = useRef<HTMLDivElement>(null);
+    const fullUrl = typeof window !== "undefined" ? `${window.location.origin}${path}` : path;
 
-    useEffect(() => {
-        // Generate the absolute URL on the client side
-        setFullUrl(`${window.location.origin}${path}`);
-    }, [path]);
+    const downloadQR = () => {
+        // Create a temporary high-def canvas for downloading only
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = 1024;
+        tempCanvas.height = 1024;
+        
+        // Use a hidden div to render the high-res QR momentarily
+        const tempDiv = document.createElement("div");
+        tempDiv.style.display = "none";
+        document.body.appendChild(tempDiv);
 
-    const downloadQRCode = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+        // We use the same qrcode.react logic but at a much higher resolution
+        // Note: In a real app we'd just use a library function, but here we can 
+        // simply grab the existing canvas and re-draw it at scale or use a hidden component.
+        // For simplicity and 100% reliability, we grab the CURRENT canvas and draw it 
+        // onto a LARGE canvas with imageSmoothingEnabled = false.
+        
+        const originalCanvas = canvasRef.current?.querySelector("canvas");
+        if (!originalCanvas) return;
 
-        if (!qrRef.current) return;
-        const canvas = qrRef.current.querySelector("canvas");
-        if (!canvas) return;
-
-        const pngUrl = canvas.toDataURL("image/png");
-
-        const downloadLink = document.createElement("a");
-        downloadLink.href = pngUrl;
-        downloadLink.download = `${eventName.replace(/\s+/g, '-').toLowerCase()}-qr-code.png`;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        const ctx = tempCanvas.getContext("2d");
+        if (ctx) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(originalCanvas, 0, 0, 1024, 1024);
+            
+            const url = tempCanvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `${eventName}-qr-hd.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        document.body.removeChild(tempDiv);
     };
 
-    if (!fullUrl) return null;
-
     return (
-        <div className="flex flex-col items-center gap-3" onClick={(e) => e.preventDefault()}>
-            <div
-                ref={qrRef}
-                className="p-3 bg-white rounded-xl shadow-sm border border-slate-100"
-            >
-                <QRCodeCanvas
-                    value={fullUrl}
+        <div className="flex flex-col items-center gap-4">
+            <div ref={canvasRef} className="p-3 bg-white rounded-xl shadow-2xl border border-white/10">
+                <QRCodeCanvas 
+                    value={fullUrl} 
                     size={size}
-                    bgColor={"#ffffff"}
-                    fgColor={"#0f172a"}
-                    level={"Q"}
+                    level="H"
+                    includeMargin={true}
+                    style={{ imageRendering: "pixelated" }}
                 />
             </div>
-            <button
-                onClick={downloadQRCode}
-                className="text-[10px] uppercase tracking-widest font-bold text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 whitespace-nowrap"
+            <button 
+                onClick={downloadQR}
+                className="group/dl text-[10px] font-bold text-black uppercase tracking-widest bg-brand-green hover:bg-white px-5 py-2.5 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.4)] active:scale-95 flex items-center gap-2"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-admin-accent/70"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg>
-                Download PNG
+                <span>Download HD PNG</span>
+                <svg className="w-3 h-3 transition-transform group-hover/dl:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
             </button>
         </div>
     );

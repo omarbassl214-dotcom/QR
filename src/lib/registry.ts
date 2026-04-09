@@ -23,7 +23,8 @@ export interface RosterIndexItem {
         usherPath: string;
         usherCount: number;
         checkedInGuestNames: string[];
-        unarrivedGuestNames: string[];
+    checkedInGuestsInfo: { id: string, name: string }[];
+    unarrivedGuestNames: string[];
         usherNames: string[];
     }[];
 }
@@ -78,7 +79,8 @@ export async function syncRegistry(): Promise<RegistryIndex> {
                 let checkedInGuests = 0;
                 let usherCount = 0;
                 let checkedInGuestNames: string[] = [];
-                let unarrivedGuestNames: string[] = [];
+        let checkedInGuestsInfo: { id: string, name: string }[] = [];
+        let unarrivedGuestNames: string[] = [];
                 let usherNames: string[] = [];
                 let completed = false;
 
@@ -92,6 +94,7 @@ export async function syncRegistry(): Promise<RegistryIndex> {
                             if (g.attended) {
                                 checkedInGuests++;
                                 checkedInGuestNames.push(name);
+                                checkedInGuestsInfo.push({ id: String(g.id), name });
                             } else {
                                 unarrivedGuestNames.push(name);
                             }
@@ -129,9 +132,10 @@ export async function syncRegistry(): Promise<RegistryIndex> {
                     globalActiveEvents++;
                 }
 
+                const name = eventId === "four-seasons-22-3" ? "Four Seasons 22/3" : capitalize(eventId);
                 return {
                     id: eventId,
-                    name: capitalize(eventId),
+                    name: name,
                     totalGuests,
                     checkedInGuests,
                     completed,
@@ -139,7 +143,8 @@ export async function syncRegistry(): Promise<RegistryIndex> {
                     usherPath: `/usher/${categoryId}/${eventId}`,
                     usherCount,
                     checkedInGuestNames,
-                    unarrivedGuestNames,
+                checkedInGuestsInfo,
+                unarrivedGuestNames,
                     usherNames
                 };
             });
@@ -207,7 +212,10 @@ export async function updateIndexEvent(
         unarrivedGuestNames?: string[],
         usherCount?: number,
         usherNames?: string[]
-    }
+    },
+    guestId?: string,
+    guestName?: string,
+    isRemove?: boolean
 ) {
     if (!fs.existsSync(INDEX_PATH)) return await syncRegistry();
 
@@ -235,26 +243,23 @@ export async function updateIndexEvent(
             event.completed = updates.completed;
         }
 
-        if (updates.checkedInGuests !== undefined) {
-             event.checkedInGuests = updates.checkedInGuests;
-        }
+        if (updates.checkedInGuests !== undefined) event.checkedInGuests = updates.checkedInGuests;
+        if (updates.checkedInGuestNames !== undefined) event.checkedInGuestNames = updates.checkedInGuestNames;
+        if (updates.unarrivedGuestNames !== undefined) event.unarrivedGuestNames = updates.unarrivedGuestNames;
+        if (updates.usherCount !== undefined) event.usherCount = updates.usherCount;
+        if (updates.usherNames !== undefined) event.usherNames = updates.usherNames;
 
-        if (updates.checkedInGuestNames !== undefined) {
-            event.checkedInGuestNames = updates.checkedInGuestNames;
+        if (guestId) {
+            const currentInfo = event.checkedInGuestsInfo || [];
+            if (isRemove) {
+                event.checkedInGuestsInfo = currentInfo.filter(info => info.id !== String(guestId));
+            } else if (guestName) {
+                if (!currentInfo.find(info => info.id === String(guestId))) {
+                    event.checkedInGuestsInfo = [...currentInfo, { id: String(guestId), name: String(guestName) }];
+                }
+            }
         }
-
-        if (updates.unarrivedGuestNames !== undefined) {
-            event.unarrivedGuestNames = updates.unarrivedGuestNames;
-        }
-
-        if (updates.usherCount !== undefined) {
-            event.usherCount = updates.usherCount;
-        }
-
-        if (updates.usherNames !== undefined) {
-            event.usherNames = updates.usherNames;
-        }
-
+        
         try {
             fs.writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2));
         } catch (e) {
@@ -263,4 +268,27 @@ export async function updateIndexEvent(
     } catch (e) {
         console.error("Failed to update index:", e);
     }
+}
+
+/**
+ * Deletes an event from the filesystem and updates the registry index.
+ */
+export async function deleteEventFromRegistry(categoryId: string, eventId: string) {
+    const eventFile = path.join(DATA_DIR, categoryId, `${eventId}.json`);
+    const metaFile = path.join(META_DIR, categoryId, `${eventId}.json`);
+    const usherFile = path.join(USHERS_DIR, `${categoryId}-${eventId}.json`);
+
+    // 1. Delete files if they exist
+    [eventFile, metaFile, usherFile].forEach(file => {
+        if (fs.existsSync(file)) {
+            try {
+                fs.unlinkSync(file);
+            } catch (e) {
+                console.error(`Failed to delete file ${file}:`, e);
+            }
+        }
+    });
+
+    // 2. Trigger full re-sync to update index
+    await syncRegistry();
 }

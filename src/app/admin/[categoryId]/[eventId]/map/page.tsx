@@ -11,25 +11,58 @@ export default function MapEditorPage() {
     const eventId = params.eventId as string;
 
     const [svgContent, setSvgContent] = useState<string | null>(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [coordinates, setCoordinates] = useState<{ [key: string]: { x: number, y: number } }>({});
     const [selectedTable, setSelectedTable] = useState<string>("");
     const [saving, setSaving] = useState(false);
+    const [loading, setLoading] = useState(true);
     
     const wrapperRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Load SVG Image Template
-        fetch(`/floorplans/${eventId}.svg`)
-            .then(res => res.ok ? res.text() : null)
-            .then(text => {
-                if (text && text.includes("<svg")) setSvgContent(text);
-            });
+        const loadFloorPlan = async () => {
+            setLoading(true);
+            try {
+                // Try SVG first
+                const svgRes = await fetch(`/floorplans/${eventId}.svg`);
+                if (svgRes.ok) {
+                    const text = await svgRes.text();
+                    if (text.includes("<svg")) {
+                        setSvgContent(text);
+                        setLoading(false);
+                        return;
+                    }
+                }
+
+                // Try PNG fallback
+                const pngRes = await fetch(`/floorplans/${eventId}.png`, { method: 'HEAD' });
+                if (pngRes.ok) {
+                    setImageUrl(`/floorplans/${eventId}.png`);
+                    setLoading(false);
+                    return;
+                }
+
+                // Try JPG fallback
+                const jpgRes = await fetch(`/floorplans/${eventId}.jpg`, { method: 'HEAD' });
+                if (jpgRes.ok) {
+                    setImageUrl(`/floorplans/${eventId}.jpg`);
+                    setLoading(false);
+                    return;
+                }
+            } catch (err) {
+                console.error("Error loading floor plan:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadFloorPlan();
 
         // Load existing coordinates
-        fetch(`/api/map?categoryId=${categoryId}&eventId=${eventId}`)
+        fetch(`/api/map?categoryId=${categoryId}&eventId=${eventId}&t=${Date.now()}`, { cache: "no-store", headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' } })
             .then(res => res.json())
             .then(data => setCoordinates(data || {}));
-    }, [categoryId, eventId, categoryId]);
+    }, [categoryId, eventId]);
 
     const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!selectedTable) return alert("Select a table number first to assign coordinates.");
@@ -68,25 +101,35 @@ export default function MapEditorPage() {
         }
     };
 
-    if (!svgContent) {
-        return <div className="p-12 text-center text-white">Loading Floor Plan Image...</div>;
+    if (loading) {
+        return <div className="p-12 text-center text-white">Loading Floor Plan...</div>;
+    }
+
+    if (!svgContent && !imageUrl) {
+        return (
+            <div className="p-12 text-center text-white">
+                <p>No floor plan found for this event.</p>
+                <p className="text-sm opacity-50 mt-2">Expected /floorplans/{eventId}.svg or .png</p>
+                <Link href={`/admin/${categoryId}`} className="mt-4 inline-block text-admin-accent hover:underline">Return to Registry</Link>
+            </div>
+        );
     }
 
     return (
-        <main className="min-h-screen bg-admin-bg relative z-0 text-slate-200 flex flex-col">
+        <main className="min-h-screen bg-admin-bg relative z-0 text-white flex flex-col">
             <nav className="w-full border-b border-admin-border bg-admin-card/50 backdrop-blur-md relative z-10 sticky top-0 shrink-0">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3 overflow-hidden">
-                        <Link href={`/admin/${categoryId}`} className="text-slate-400 hover:text-white group shrink-0">
+                        <Link href={`/admin/${categoryId}`} className="text-white/50 hover:text-white group shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
                         </Link>
                         <h1 className="font-serif text-sm sm:text-lg font-medium text-white tracking-wide truncate">Floor Plan Mapping Tool</h1>
-                        <span className="hidden xs:inline-block font-sans text-[10px] tracking-[0.1em] text-slate-500 uppercase rounded-full bg-white/5 border border-white/10 px-2 py-0.5 shrink-0">{eventId}</span>
+                        <span className="hidden xs:inline-block font-sans text-[10px] tracking-[0.1em] text-white/40 uppercase rounded-full bg-white/5 border border-white/10 px-2 py-0.5 shrink-0">{eventId}</span>
                     </div>
                     <button 
                         onClick={handleSave} 
                         disabled={saving}
-                        className="px-4 sm:px-6 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg text-[10px] sm:text-xs font-mono tracking-widest uppercase transition-colors shrink-0"
+                        className="px-4 sm:px-6 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-lg text-[10px] sm:text-xs font-mono tracking-widest uppercase transition-colors shrink-0"
                     >
                         {saving ? "Saving..." : "Save"}
                     </button>
@@ -97,24 +140,24 @@ export default function MapEditorPage() {
                 {/* Left Sidebar - Configuration */}
                 <div className="w-full md:w-80 border-b md:border-b-0 md:border-r border-admin-border bg-white/5 p-4 sm:p-6 flex flex-col gap-6 overflow-y-auto max-h-[40vh] md:max-h-none shrink-0">
                     <div className="space-y-4">
-                        <h2 className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.15em] text-slate-400">Map Table Configuration</h2>
-                        <p className="hidden sm:block text-xs text-slate-500 leading-relaxed">Type the table number below, then click on the corresponding table on the floor plan image to set its marker location.</p>
+                        <h2 className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.15em] text-white/60">Map Table Configuration</h2>
+                        <p className="hidden sm:block text-xs text-white/50 leading-relaxed">Type the table number below, then click on the corresponding table on the floor plan image to set its marker location.</p>
                         
                         <div className="space-y-2">
-                            <label className="text-[10px] font-semibold text-slate-300 uppercase tracking-widest">Target Table ID</label>
+                            <label className="text-[10px] font-semibold text-white/70 uppercase tracking-widest">Target Table ID</label>
                             <input 
                                 type="text"
                                 value={selectedTable}
                                 onChange={e => setSelectedTable(e.target.value)}
                                 placeholder="e.g. 19"
-                                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-lg focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all font-mono"
+                                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-lg focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-white/50 transition-all font-mono"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-3 pt-4 md:pt-6 border-t border-white/10">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-[10px] font-sans uppercase tracking-[0.15em] text-slate-400">Mapped Tables ({Object.keys(coordinates).length})</h3>
+                            <h3 className="text-[10px] font-sans uppercase tracking-[0.15em] text-white/60">Mapped Tables ({Object.keys(coordinates).length})</h3>
                             <button 
                                 onClick={() => setCoordinates({})}
                                 className="text-[10px] text-red-400 hover:text-red-300 uppercase tracking-widest font-mono"
@@ -129,7 +172,7 @@ export default function MapEditorPage() {
                                 <div key={key} className="relative group">
                                     <button 
                                         onClick={() => setSelectedTable(key)}
-                                        className={`w-full aspect-square rounded-lg border flex items-center justify-center font-mono text-[10px] sm:text-xs ${selectedTable === key ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-black/20 text-slate-400 border-white/5 hover:border-white/20 hover:text-white'}`}
+                                        className={`w-full aspect-square rounded-lg border flex items-center justify-center font-mono text-[10px] sm:text-xs ${selectedTable === key ? 'bg-white/20 text-white border-white/50' : 'bg-black/20 text-white/40 border-white/5 hover:border-white/20 hover:text-white'}`}
                                     >
                                         {key}
                                     </button>
@@ -154,18 +197,27 @@ export default function MapEditorPage() {
                         onClick={handleImageClick}
                     >
                         {/* 1. Underlying Floor Plan */}
-                        <div 
-                            className="w-full h-auto opacity-50 pointer-events-none"
-                            dangerouslySetInnerHTML={{ 
-                                __html: svgContent.replace(/<svg/, '<svg style="width: 100%; height: auto; max-block-size: none;"') 
-                            }}
-                        />
+                        {svgContent ? (
+                            <div 
+                                className="w-full h-auto opacity-50 pointer-events-none"
+                                dangerouslySetInnerHTML={{ 
+                                    __html: svgContent.replace(/<svg/, '<svg style="width: 100%; height: auto; max-block-size: none;"') 
+                                }}
+                            />
+                        ) : (
+                            <img 
+                                src={imageUrl!} 
+                                alt="Floor Plan"
+                                className="w-full h-auto opacity-50 pointer-events-none"
+                                style={{ display: 'block' }}
+                            />
+                        )}
 
                         {/* 2. Overlaid Markers */}
                         {Object.entries(coordinates).map(([key, pos]) => (
                             <div 
                                 key={key}
-                                className={`absolute w-6 h-6 rounded-full border-2 flex items-center justify-center -translate-x-1/2 -translate-y-1/2 pointer-events-none ${selectedTable === key ? 'bg-emerald-500 border-white shadow-[0_0_15px_rgba(16,185,129,0.8)] z-20' : 'bg-slate-800 border-white/30 text-slate-400 z-10'}`}
+                                className={`absolute w-6 h-6 rounded-full border-2 flex items-center justify-center -translate-x-1/2 -translate-y-1/2 pointer-events-none ${selectedTable === key ? 'bg-white border-black text-black shadow-[0_0_15px_rgba(255,255,255,0.8)] z-20' : 'bg-white/10 border-white/30 text-white/70 z-10'}`}
                                 style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
                             >
                                 <span className={`text-[9px] font-bold ${selectedTable === key ? 'text-white' : ''}`}>{key}</span>
@@ -176,9 +228,9 @@ export default function MapEditorPage() {
                         {!selectedTable && (
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30 bg-black/50 backdrop-blur-sm">
                                 <div className="bg-admin-card p-6 rounded-2xl border border-white/10 shadow-2xl text-center mx-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold mx-auto mb-4"><circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white mx-auto mb-4"><circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/></svg>
                                     <h3 className="text-lg text-white font-serif mb-2">Select a Table ID first</h3>
-                                    <p className="text-sm text-slate-400 max-w-sm">Use the tools panel to type a Table Number before clicking on the map.</p>
+                                    <p className="text-sm text-white/50 max-w-sm">Use the tools panel to type a Table Number before clicking on the map.</p>
                                 </div>
                             </div>
                         )}

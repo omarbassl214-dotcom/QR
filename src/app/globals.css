@@ -1,19 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-obsidian: #0A0A0B;
-  --color-obsidian-light: #161618;
-  --color-gold: #D4AF37;
-  --color-gold-muted: rgba(212, 175, 55, 0.4);
+  --color-obsidian: #050505;
+  --color-obsidian-light: #0A0A0B;
+  --color-gold: #006B3F; /* Replaced Gold with Brand Green */
+  --color-gold-muted: rgba(0, 107, 63, 0.4);
+  
+  /* Brand Specifics */
+  --color-brand-green: #006B3F;
+  --color-brand-green-glow: rgba(0, 107, 63, 0.2);
   
   /* Admin Premium Theme Colors */
-  --color-admin-bg: #09090b; /* Zinc 950 essentially */
-  --color-admin-card: rgba(24, 24, 27, 0.6); 
-  --color-admin-card-hover: rgba(39, 39, 42, 0.8);
-  --color-admin-border: rgba(255, 255, 255, 0.08);
-  --color-admin-border-hover: rgba(255, 255, 255, 0.15);
-  --color-admin-accent: rgba(56, 189, 248, 0.8); /* Sky 400 */
-  --color-admin-accent-glow: rgba(56, 189, 248, 0.2);
+  --color-admin-bg: #000000;
+  --color-admin-card: rgba(10, 10, 11, 0.7); 
+  --color-admin-card-hover: rgba(15, 15, 16, 0.9);
+  --color-admin-border: rgba(255, 255, 255, 0.05);
+  --color-admin-border-hover: rgba(255, 255, 255, 0.12);
+  --color-admin-accent: #006B3F; /* Updated to Brand Green */
+  --color-admin-accent-glow: rgba(0, 107, 63, 0.3);
   
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
@@ -21,9 +25,10 @@
 
 @layer base {
   body {
-    background-color: var(--color-obsidian);
+    background-color: #050505; /* Deeper black for marble contrast */
     color: #F8FAFC;
     font-family: var(--font-sans);
+    overflow-x: hidden;
   }
 }
 
@@ -31,6 +36,7 @@
 @layer utilities {
   .glass-panel {
     @apply bg-obsidian-light/40 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)];
+    -webkit-backdrop-filter: blur(24px);
   }
   
   .glass-panel-hover {
@@ -38,12 +44,21 @@
   }
   
   .text-gradient-gold {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold via-yellow-200 to-gold;
+    @apply text-white;
+  }
+
+  .text-luxury-gold {
+    @apply text-white;
+  }
+
+  .text-luxury-emerald {
+    @apply text-white;
   }
 
   /* Admin Dashboard specific styling */
   .admin-panel {
     @apply bg-admin-card backdrop-blur-2xl border border-admin-border shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500;
+    -webkit-backdrop-filter: blur(40px);
   }
 
   .admin-panel-hover {
@@ -51,8 +66,38 @@
   }
   
   .admin-text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-200 via-white to-slate-400;
+    @apply text-white;
   }
+
+  /* Mobile Responsive Utilities */
+  .mobile-icon-only {
+    @apply flex items-center justify-center p-2 rounded-xl transition-all duration-300 sm:px-4 sm:py-2 sm:rounded-lg;
+  }
+  
+  .mobile-text-hidden {
+    @apply hidden sm:inline;
+  }
+
+  .mobile-hide {
+    @apply hidden sm:block;
+  }
+
+  .mobile-p-4 {
+    @apply p-4 sm:p-8;
+  }
+
+  .mobile-gap-4 {
+    @apply gap-4 sm:gap-8;
+  }
+
+  .mobile-text-2xl {
+    @apply text-2xl sm:text-3xl;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 /* Base resets for animations */
