@@ -9,8 +9,25 @@ const getValidUrl = (url?: string) => {
 };
 
 const KV_CONFIG = {
-    url: getValidUrl(process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL),
-    token: (process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || "").includes("your-token-here") ? "" : (process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || ""),
+    url: getValidUrl(
+        process.env.KV_REST_API_URL || 
+        process.env.UPSTASH_REDIS_KV_REST_API_URL || 
+        process.env.UPSTASH_REDIS_REST_URL || 
+        process.env.REDIS_URL
+    ),
+    token: (
+        process.env.KV_REST_API_TOKEN || 
+        process.env.UPSTASH_REDIS_KV_REST_API_TOKEN || 
+        process.env.UPSTASH_REDIS_REST_TOKEN || 
+        ""
+    ).includes("your-token-here") 
+        ? "" 
+        : (
+            process.env.KV_REST_API_TOKEN || 
+            process.env.UPSTASH_REDIS_KV_REST_API_TOKEN || 
+            process.env.UPSTASH_REDIS_REST_TOKEN || 
+            ""
+        ),
 };
 
 // Lazy initialization with connection check
