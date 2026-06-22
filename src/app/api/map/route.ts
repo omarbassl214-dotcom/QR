@@ -17,7 +17,7 @@ export async function GET(req: Request) {
     try {
         // Try KV Database First
         const kvData = await getMapCoordinates(categoryId, eventId);
-        if (kvData && Object.keys(kvData).length > 0 && Array.isArray(kvData.tables) && kvData.tables.length > 0) {
+        if (kvData && Object.keys(kvData).length > 0) {
             return NextResponse.json(kvData);
         }
 
