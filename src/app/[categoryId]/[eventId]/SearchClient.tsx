@@ -280,7 +280,7 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                                                                     <p className="text-white/40 text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em]">Seating</p>
                                                                     <div className="flex items-center justify-center">
                                                                         <div className="text-lg sm:text-xl font-sans font-medium text-amber-400 tracking-tight bg-amber-400/10 px-4 py-2 rounded-xl border border-amber-400/20">
-                                                                            جلوس حر
+                                                                            Free Seating
                                                                         </div>
                                                                     </div>
                                                                 </>
