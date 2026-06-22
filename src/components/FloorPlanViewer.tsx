@@ -131,14 +131,14 @@ export default function FloorPlanViewer({ categoryId, eventId, targetTable }: { 
                 {/* 2. Highlight Overlay */}
                 {pos && (
                     <div 
-                        className="absolute z-10 w-16 h-16 pointer-events-none -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+                        className="absolute z-10 w-8 h-8 sm:w-16 sm:h-16 pointer-events-none -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
                         style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
                     >
                         {/* Outer ping */}
-                        <div className="absolute inset-0 rounded-full border-[3px] border-brand-green/60 opacity-50 animate-ping" style={{ animationDuration: '2s' }}></div>
+                        <div className="absolute inset-0 rounded-full border-2 sm:border-[3px] border-brand-green/60 opacity-50 animate-ping" style={{ animationDuration: '2s' }}></div>
                         {/* Inner circle */}
-                        <div className="absolute w-8 h-8 rounded-full bg-brand-green border-2 border-white shadow-[0_0_20px_rgba(0,107,63,0.8)] flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">{targetTable}</span>
+                        <div className="absolute w-5 h-5 sm:w-8 sm:h-8 rounded-full bg-brand-green border-[1.5px] sm:border-2 border-white shadow-[0_0_10px_rgba(0,107,63,0.8)] sm:shadow-[0_0_20px_rgba(0,107,63,0.8)] flex items-center justify-center">
+                            <span className="text-white text-[9px] sm:text-xs font-bold leading-none">{targetTable}</span>
                         </div>
                     </div>
                 )}
