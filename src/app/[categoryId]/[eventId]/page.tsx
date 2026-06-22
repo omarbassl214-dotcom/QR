@@ -43,6 +43,8 @@ export default async function EventPage({ params }: { params: Promise<{ category
     let eventName = capitalize(eventId);
     if (eventId === "four-seasons-22-3") {
         eventName = "Four Seasons 22/3 Wedding";
+    } else if (eventId === "june-26-wedding") {
+        eventName = "June 26 Wedding";
     } else if (categoryId === "weddings") {
         // Special formatting for weddings e.g. "Mohamed & Maya's Wedding"
         eventName = eventId.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" & ") + "'s Wedding";
