@@ -28,8 +28,6 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
     const [checkingIn, setCheckingIn] = useState<string | null>(null);
     const [isFloorPlanOpen, setIsFloorPlanOpen] = useState(false);
     const [selectedTable, setSelectedTable] = useState<number | null>(null);
-    const [selectedTableDetails, setSelectedTableDetails] = useState<string | null>(null);
-    const [viewMode, setViewMode] = useState<"guests" | "tables">("guests");
 
     // Fix typing lag by deferring the intensive filter operation
     const deferredQuery = useDeferredValue(query);
@@ -42,44 +40,7 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
     const checkedInCount = localGuests.filter(g => g.attended).length;
     const totalCount = localGuests.length;
 
-    // Build Table Summary logic
-    const tableGroups = useMemo(() => {
-        const groups: Record<string, { total: number; checkedIn: number; guests: Guest[] }> = {};
-        for (const g of localGuests) {
-            if (!g.tableNumber && g.tableNumber !== 0) continue;
-            const t = String(g.tableNumber);
-            if (!groups[t]) groups[t] = { total: 0, checkedIn: 0, guests: [] };
-            groups[t].total++;
-            if (g.attended) groups[t].checkedIn++;
-            groups[t].guests.push(g);
-        }
 
-        // Hardcode specific capacities for testing the Fairmont event
-        const eventId = params.eventId; // Assuming eventId is available from params
-        if (eventId === "fairmont-22-3") {
-            const FAIRMONT_CAPACITIES: Record<string, number> = {
-                "1": 16, "2": 16, "3": 10, "4": 10, "5": 16, "6": 16,
-                "7": 8, "8": 8, "9": 8, "10": 8, "11": 8, "12": 8,
-                "13": 16, "14": 16, "15": 16, "16": 16,
-                "17": 8, "18": 8, "19": 8, "20": 8
-            };
-
-            Object.entries(FAIRMONT_CAPACITIES).forEach(([t, cap]) => {
-                // If a table exists on the floor plan but no guests are assigned, still show it!
-                if (!groups[t]) groups[t] = { total: cap, checkedIn: 0, guests: [] };
-                else groups[t].total = cap; // Overwrite the total with the exact physical seat count
-            });
-        }
-
-        return Object.entries(groups).map(([t, data]) => ({ tableNumber: t, ...data })).sort((a, b) => {
-            const numA = Number(a.tableNumber);
-            const numB = Number(b.tableNumber);
-            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
-            if (!isNaN(numA)) return -1;
-            if (!isNaN(numB)) return 1;
-            return a.tableNumber.localeCompare(b.tableNumber);
-        });
-    }, [localGuests, params.eventId]);
 
     // Helper to get display name for a guest (supports both name formats)
     const getDisplayName = (guest: Guest) => {
@@ -183,9 +144,6 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
     const MAX_RENDER_LIMIT = 40;
     const paginatedGuests = filteredGuests.slice(0, MAX_RENDER_LIMIT);
 
-    const activeTableRecord = tableGroups.find(g => g.tableNumber === selectedTableDetails);
-    const activeTableGuests = activeTableRecord ? activeTableRecord.guests : [];
-
     return (
         <div className="relative w-full h-full min-h-screen">
             {/* Admin-only Back Button */}
@@ -240,36 +198,6 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                 <div className="w-12 h-px bg-white/20 mx-auto mt-4 sm:mt-6" />
             </motion.div>
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex items-center justify-center gap-2 mb-6"
-            >
-                <div className="bg-[#111111] p-1 rounded-2xl border border-white/5 flex items-center relative z-20">
-                    <button
-                        onClick={() => setViewMode("guests")}
-                        className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors ${
-                            viewMode === "guests" 
-                                ? "bg-brand-green text-white" 
-                                : "text-white/40 hover:text-white/80"
-                        }`}
-                    >
-                        Guests
-                    </button>
-                    <button
-                        onClick={() => setViewMode("tables")}
-                        className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors ${
-                            viewMode === "tables" 
-                                ? "bg-brand-green text-white" 
-                                : "text-white/40 hover:text-white/80"
-                        }`}
-                    >
-                        Tables
-                    </button>
-                </div>
-            </motion.div>
-
-            {viewMode === "guests" && (
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
