@@ -229,12 +229,10 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                     </AnimatePresence>
                 </div>
             </motion.div>
-            )}
 
             <div className="relative z-10 min-h-[40vh]">
                 <AnimatePresence mode="popLayout">
-                    {viewMode === "guests" && (
-                    query.trim() === "" ? null : filteredGuests.length > 0 ? (
+                    {query.trim() === "" ? null : filteredGuests.length > 0 ? (
                         <motion.div
                             key="results"
                             variants={containerVars}
@@ -387,141 +385,10 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                             <p className="text-white text-lg mb-2">No matching reservation found</p>
                             <p className="text-sm text-white/50">Please speak with an usher for immediate assistance.</p>
                         </motion.div>
-                    ))}
-
-                    {viewMode === "tables" && (
-                        <motion.div
-                            key="tables-view"
-                            variants={containerVars}
-                            initial="hidden"
-                            animate="show"
-                            exit="exit"
-                            className="grid grid-cols-2 gap-4"
-                        >
-                            {tableGroups.map(group => {
-                                const progress = Math.min((group.checkedIn / group.total) * 100, 100);
-                                const isFull = group.checkedIn === group.total;
-                                return (
-                                    <motion.div
-                                        key={`table-${group.tableNumber}`}
-                                        variants={itemVars}
-                                        className={`bg-[#111111] rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between border ${isFull ? 'border-brand-green/30' : 'border-white/5'}`}
-                                        onClick={() => {
-                                            setSelectedTableDetails(group.tableNumber);
-                                        }}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <div className="flex flex-col space-y-3 relative z-10">
-                                            <div className="space-y-1">
-                                                <p className="text-white/40 text-[10px] sm:text-xs font-sans uppercase tracking-[0.2em]">Table</p>
-                                                <h3 className="text-4xl font-serif text-white tracking-tighter">
-                                                    {group.tableNumber}
-                                                </h3>
-                                            </div>
-                                            
-                                            <div className="flex items-center justify-between pt-2">
-                                                <div className="flex items-center gap-2">
-                                                    <div className={`w-2 h-2 rounded-full ${isFull ? 'bg-brand-green' : 'bg-white/30'}`} />
-                                                    <span className="text-[10px] sm:text-xs font-bold font-sans text-white/80 tracking-widest uppercase">
-                                                        {group.checkedIn} / {group.total}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            
-                                            <div className="w-full h-1.5 bg-black rounded-full overflow-hidden mt-1">
-                                                <div 
-                                                    className={`h-full transition-all duration-300 ${isFull ? 'bg-brand-green' : 'bg-white/40'}`}
-                                                    style={{ width: `${progress}%` }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
-                        </motion.div>
                     )}
                 </AnimatePresence>
             </div>
 
-            {/* Table Details Modal */}
-            <AnimatePresence>
-                {selectedTableDetails !== null && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[90] flex items-center justify-center bg-black/95 p-4"
-                        onClick={() => setSelectedTableDetails(null)}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.95, y: 20 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.95, y: 20 }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="relative w-full max-w-lg bg-[#111111] border border-white/10 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
-                        >
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-white/5 bg-[#181818] shrink-0 gap-4">
-                                <div>
-                                    <h3 className="text-white font-serif text-3xl leading-tight">Table {selectedTableDetails}</h3>
-                                    <p className="text-white/50 text-xs font-sans mt-1">
-                                        {activeTableRecord?.checkedIn || 0} / {activeTableRecord?.total || 0} Guests Checked In
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-3 w-full sm:w-auto">
-                                    <button
-                                        onClick={() => {
-                                            setSelectedTable(Number(selectedTableDetails));
-                                            setIsFloorPlanOpen(true);
-                                        }}
-                                        className="h-12 sm:h-auto flex-1 sm:flex-none px-4 py-2 flex items-center justify-center gap-2 bg-brand-green/10 hover:bg-brand-green/20 text-brand-green border border-brand-green/20 rounded-xl transition-colors text-xs font-bold uppercase tracking-wider"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-                                        <span>View Map</span>
-                                    </button>
-                                    <button
-                                        onClick={() => setSelectedTableDetails(null)}
-                                        className="h-12 w-12 sm:h-10 sm:w-10 flex shrink-0 items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white transition-colors"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <div className="p-4 overflow-y-auto space-y-3">
-                                {activeTableGuests.length === 0 ? (
-                                    <div className="py-12 text-center text-white/50 italic">No guests assigned to this table.</div>
-                                ) : (
-                                    activeTableGuests.map(guest => (
-                                        <div key={guest.id} className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center justify-between">
-                                            <div>
-                                                <h4 className="text-white font-serif text-lg">{getDisplayName(guest)}</h4>
-                                            </div>
-                                            <button
-                                                onClick={() => handleCheckIn(guest.id)}
-                                                disabled={checkingIn === guest.id}
-                                                className={`h-10 px-6 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
-                                                    guest.attended 
-                                                    ? 'bg-brand-green text-white shadow-[0_0_15px_rgba(0,107,63,0.5)] border border-brand-green' 
-                                                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
-                                                }`}
-                                            >
-                                                {checkingIn === guest.id ? (
-                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                ) : guest.attended ? (
-                                                    "Checked In"
-                                                ) : (
-                                                    "Check In"
-                                                )}
-                                            </button>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-            
             {/* Extremely lightweight FloorPlan modal overlay */}
             <AnimatePresence>
                 {isFloorPlanOpen && selectedTable !== null && (
