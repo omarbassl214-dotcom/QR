@@ -241,131 +241,90 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
                             exit="exit"
                             className="space-y-4 sm:space-y-6"
                         >
-                            {(() => {
-                                // Group results by familyGroup for display
-                                const familyGroups: Record<string, Guest[]> = {};
-                                const soloGuests: Guest[] = [];
-                                
-                                paginatedGuests.forEach(guest => {
-                                    if (guest.familyGroup) {
-                                        if (!familyGroups[guest.familyGroup]) familyGroups[guest.familyGroup] = [];
-                                        familyGroups[guest.familyGroup].push(guest);
-                                    } else {
-                                        soloGuests.push(guest);
-                                    }
-                                });
-
-                                const renderGuestCard = (guest: Guest) => {
-                                    const displayName = getDisplayName(guest);
-                                    const isFreeSeat = !guest.tableNumber || guest.tableNumber === 0;
-
-                                    return (
-                                        <div
-                                            key={guest.id}
-                                            className="bg-[#111111] rounded-2xl p-6 sm:p-8 relative border border-white/5 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300"
-                                        >
-                                            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                                                <div className="space-y-1">
-                                                    <p className="text-white/50 text-[10px] sm:text-xs font-sans uppercase tracking-[0.2em]">Guest Identity</p>
-                                                    <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-wide">{displayName}</h2>
-                                                </div>
-
-                                                <div className="w-full h-px bg-white/5 my-2 sm:my-4" />
-
-                                                <div className="flex flex-col w-full max-w-xs sm:max-w-sm mx-auto gap-3 sm:gap-4">
-                                                    <div className="grid grid-cols-2 gap-4 items-center">
-                                                        <div className="space-y-1 sm:space-y-2">
-                                                            {isFreeSeat ? (
-                                                                <>
-                                                                    <p className="text-white/40 text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em]">Seating</p>
-                                                                    <div className="flex items-center justify-center">
-                                                                        <div className="text-lg sm:text-xl font-sans font-medium text-amber-400 tracking-tight bg-amber-400/10 px-4 py-2 rounded-xl border border-amber-400/20">
-                                                                            Free Seating
-                                                                        </div>
-                                                                    </div>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <p className="text-white/40 text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em]">Table</p>
-                                                                    <div className="flex items-center justify-center">
-                                                                        <div className="text-4xl sm:text-5xl font-sans font-light text-white tracking-tighter">
-                                                                            {guest.tableNumber}
-                                                                        </div>
-                                                                    </div>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                        
-                                                        <div className="space-y-1 sm:space-y-2 flex flex-col items-center border-l border-white/5 pl-4">
-                                                            <p className="text-white/50 text-[10px] font-sans uppercase tracking-[0.1em]">Status</p>
-                                                            <div className="flex items-center justify-center w-full min-h-[44px]">
-                                                                {guest.attended ? (
-                                                                    <div className="w-full py-2 px-2 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-0.5">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M20 6 9 17l-5-5"/></svg>
-                                                                        <span className="text-[9px] font-bold text-white tracking-widest uppercase">Venue In</span>
-                                                                    </div>
-                                                                ) : (
-                                                                    <button
-                                                                        onClick={() => handleCheckIn(guest.id)}
-                                                                        disabled={checkingIn === guest.id}
-                                                                        className="w-full py-2 px-2 rounded-xl bg-brand-green/20 hover:bg-brand-green border border-brand-green/30 transition-colors flex flex-col items-center justify-center gap-0.5 group disabled:opacity-50"
-                                                                    >
-                                                                        {checkingIn === guest.id ? (
-                                                                            <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                                        ) : (
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-                                                                        )}
-                                                                        <span className="text-[9px] font-bold text-white tracking-widest uppercase">Arrival</span>
-                                                                    </button>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    {!isFreeSeat && (
-                                                        <button
-                                                            onClick={() => {
-                                                                setSelectedTable(Number(guest.tableNumber));
-                                                                setIsFloorPlanOpen(true);
-                                                            }}
-                                                            className="w-full py-3 sm:py-4 px-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center gap-3"
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-                                                            <span className="text-[10px] sm:text-xs font-bold text-white/70 tracking-[0.2em] uppercase">Digital Roadmap</span>
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                };
+                            {paginatedGuests.map(guest => {
+                                const displayName = getDisplayName(guest);
+                                const isFreeSeat = !guest.tableNumber || guest.tableNumber === 0;
 
                                 return (
-                                    <>
-                                        {/* Family Groups */}
-                                        {Object.entries(familyGroups).map(([groupName, members]) => (
-                                            <div key={groupName} className="bg-[#111111] rounded-2xl overflow-hidden border border-white/5 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                                {/* Family Header */}
-                                                <div className="px-5 py-4 sm:px-6 sm:py-5 bg-white/[0.03] border-b border-white/5 flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-lg bg-brand-green/10 flex items-center justify-center shrink-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-green"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="text-lg sm:text-xl font-serif text-white">{groupName}</h3>
-                                                        <p className="text-[10px] text-white/40 font-sans uppercase tracking-widest">{members.length} members</p>
-                                                    </div>
-                                                </div>
-                                                {/* Family Members List */}
-                                                <div className="p-3 sm:p-4 space-y-4">
-                                                    {members.map(member => renderGuestCard(member))}
-                                                </div>
+                                    <div
+                                        key={guest.id}
+                                        className="bg-[#111111] rounded-2xl p-6 sm:p-8 relative border border-white/5 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300"
+                                    >
+                                        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+                                            <div className="space-y-1">
+                                                <p className="text-white/50 text-[10px] sm:text-xs font-sans uppercase tracking-[0.2em]">Guest Identity</p>
+                                                <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-wide">{displayName}</h2>
                                             </div>
-                                        ))}
-                                        {/* Solo Guests (no family group) */}
-                                        {soloGuests.map(guest => renderGuestCard(guest))}
-                                    </>
+
+                                            <div className="w-full h-px bg-white/5 my-2 sm:my-4" />
+
+                                            <div className="flex flex-col w-full max-w-xs sm:max-w-sm mx-auto gap-3 sm:gap-4">
+                                                <div className="grid grid-cols-2 gap-4 items-center">
+                                                    <div className="space-y-1 sm:space-y-2">
+                                                        {isFreeSeat ? (
+                                                            <>
+                                                                <p className="text-white/40 text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em]">Seating</p>
+                                                                <div className="flex items-center justify-center">
+                                                                    <div className="text-lg sm:text-xl font-sans font-medium text-amber-400 tracking-tight bg-amber-400/10 px-4 py-2 rounded-xl border border-amber-400/20">
+                                                                        Free Seating
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <p className="text-white/40 text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em]">Table</p>
+                                                                <div className="flex items-center justify-center">
+                                                                    <div className="text-4xl sm:text-5xl font-sans font-light text-white tracking-tighter">
+                                                                        {guest.tableNumber}
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    <div className="space-y-1 sm:space-y-2 flex flex-col items-center border-l border-white/5 pl-4">
+                                                        <p className="text-white/50 text-[10px] font-sans uppercase tracking-[0.1em]">Status</p>
+                                                        <div className="flex items-center justify-center w-full min-h-[44px]">
+                                                            {guest.attended ? (
+                                                                <div className="w-full py-2 px-2 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-0.5">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M20 6 9 17l-5-5"/></svg>
+                                                                    <span className="text-[9px] font-bold text-white tracking-widest uppercase">Venue In</span>
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => handleCheckIn(guest.id)}
+                                                                    disabled={checkingIn === guest.id}
+                                                                    className="w-full py-2 px-2 rounded-xl bg-brand-green/20 hover:bg-brand-green border border-brand-green/30 transition-colors flex flex-col items-center justify-center gap-0.5 group disabled:opacity-50"
+                                                                >
+                                                                    {checkingIn === guest.id ? (
+                                                                        <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                                                    ) : (
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+                                                                    )}
+                                                                    <span className="text-[9px] font-bold text-white tracking-widest uppercase">Arrival</span>
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                {!isFreeSeat && (
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedTable(Number(guest.tableNumber));
+                                                            setIsFloorPlanOpen(true);
+                                                        }}
+                                                        className="w-full py-3 sm:py-4 px-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center gap-3"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                                                        <span className="text-[10px] sm:text-xs font-bold text-white/70 tracking-[0.2em] uppercase">View Floor Plan</span>
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
                                 );
-                            })()}
+                            })}
                             {filteredGuests.length > MAX_RENDER_LIMIT && (
                                 <div className="text-center py-6">
                                     <p className="text-white/40 text-[10px] font-sans uppercase tracking-[0.2em] animate-pulse">
