@@ -1,6 +1,6 @@
 {
   "globalStats": {
-    "totalGuests": 507,
+    "totalGuests": 511,
     "activeEvents": 4,
     "doneEvents": 0
   },
@@ -11,12 +11,12 @@
       "path": "/admin/weddings",
       "activeCount": 1,
       "doneCount": 0,
-      "guestCount": 174,
+      "guestCount": 178,
       "events": [
         {
           "id": "june-26-wedding",
           "name": "June 26 Wedding",
-          "totalGuests": 174,
+          "totalGuests": 178,
           "checkedInGuests": 0,
           "completed": false,
           "publicPath": "/weddings/june-26-wedding",
@@ -107,8 +107,12 @@
             "راما بشار",
             "لانا منج",
             "رشا منج",
-            "Jessica cama mimi",
-            "eman kader sula",
+            "Jessica",
+            "cama",
+            "mimi",
+            "eman",
+            "kader",
+            "sula",
             "يوسف المومني وفاء قصراوي",
             "احمد المومني",
             "عبدالله المومني",
@@ -593,5 +597,5 @@
       ]
     }
   ],
-  "lastSynced": "2026-06-25T11:25:41.109Z"
+  "lastSynced": "2026-06-25T11:28:39.970Z"
 }
