@@ -1,6 +1,6 @@
 {
   "globalStats": {
-    "totalGuests": 511,
+    "totalGuests": 510,
     "activeEvents": 4,
     "doneEvents": 0
   },
@@ -11,12 +11,12 @@
       "path": "/admin/weddings",
       "activeCount": 1,
       "doneCount": 0,
-      "guestCount": 178,
+      "guestCount": 177,
       "events": [
         {
           "id": "june-26-wedding",
           "name": "June 26 Wedding",
-          "totalGuests": 178,
+          "totalGuests": 177,
           "checkedInGuests": 0,
           "completed": false,
           "publicPath": "/weddings/june-26-wedding",
@@ -108,11 +108,9 @@
             "لانا منج",
             "رشا منج",
             "Jessica",
-            "cama",
-            "mimi",
-            "eman",
-            "kader",
-            "sula",
+            "Cama",
+            "Mimi",
+            "Sula",
             "يوسف المومني وفاء قصراوي",
             "احمد المومني",
             "عبدالله المومني",
@@ -202,7 +200,8 @@
             "رانيا قعدان",
             "محمد الحران",
             "حمزة الحران",
-            "علي شديفات"
+            "علي شديفات",
+            "Eman Khader"
           ],
           "usherNames": []
         }
@@ -597,5 +596,5 @@
       ]
     }
   ],
-  "lastSynced": "2026-06-25T11:28:39.970Z"
+  "lastSynced": "2026-06-26T02:15:22.100Z"
 }

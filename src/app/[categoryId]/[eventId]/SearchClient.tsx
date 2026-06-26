@@ -62,11 +62,11 @@ export default function SearchClient({ guests, eventName }: { guests: Guest[]; e
 
         const q = normalizeArabic(deferredQuery.toLowerCase().replace(/\s+/g, ' ').trim());
         
-        // Find direct matches
+        // Find direct matches (includes the search query anywhere in the name)
         const directMatches = localGuests.filter((guest) => {
             const displayName = guest.name || `${guest.firstName} ${guest.lastName}`.trim();
             const normalized = normalizeArabic(displayName.toLowerCase()).replace(/\s+/g, ' ').trim();
-            return normalized.startsWith(q);
+            return normalized.includes(q);
         });
 
         // Expand to include family members
